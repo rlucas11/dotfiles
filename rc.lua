@@ -84,7 +84,7 @@ naughty.config.defaults.gap = 1
 naughty.config.defaults.ontop = true
 naughty.config.defaults.font = "Monaco 10"
 naughty.config.defaults.icon = nil
-naughty.config.defaults.icon_size = 256
+naughty.config.defaults.icon_size = 64
 naughty.config.defaults.fg = beautiful.fg_tooltip
 naughty.config.defaults.bg = beautiful.bg_tooltip
 naughty.config.defaults.border_color = beautiful.border_tooltip
@@ -364,6 +364,11 @@ globalkeys = awful.util.table.join(
   --}}}
   
 
+  --Volume manipulation
+  awful.key({}, "XF86AudioRaiseVolume", function() awful.util.spawn("amixer set Master 5+") end),
+  awful.key({}, "XF86AudioLowerVolume", function() awful.util.spawn("amixer set Master 5-") end),
+
+
     -- Layout manipulation
     awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.byidx(  1)    end),
     awful.key({ modkey, "Shift"   }, "k", function () awful.client.swap.byidx( -1)    end),
@@ -413,7 +418,10 @@ clientkeys = awful.util.table.join(
     awful.key({ modkey, "Shift"   }, "c",      function (c) c:kill()                         end),
     awful.key({ modkey, "Control" }, "space",  awful.client.floating.toggle                     ),
     awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end),
-    awful.key({ modkey,           }, "o",      awful.client.movetoscreen                        ),
+    -- awful.key({ modkey,           }, "o",      awful.client.movetoscreen                        ),
+    awful.key({ modkey, "Shift"   }, "o",      function(c) awful.client.movetoscreen(c,c.screen-1) end ),
+    awful.key({ modkey,           }, "o",      function(c) awful.client.movetoscreen(c,c.screen+1) end ),
+
     awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop            end),
     awful.key({ modkey,           }, "n",
         function (c)
