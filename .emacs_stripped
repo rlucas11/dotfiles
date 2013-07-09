@@ -1,0 +1,26 @@
+(add-to-list 'load-path "~/emacs")
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+(menu-bar-mode -1)
+
+;; open with single window
+(setq inhibit-startup-screen t)
+(add-hook 'emacs-startup-hook 'delete-other-windows)
+(setq inhibit-startup-buffer-menu t)
+
+(add-hook 'text-mode-hook 'turn-on-flyspell) ; Turn on spell checking in text mode
+
+;;Color theme
+(require 'color-theme)
+(color-theme-initialize)
+(require 'zenburn)
+(zenburn)
+
+;; mutt
+;;(add-to-list 'auto-mode-alist '("/mutt" . mail-mode))
+(autoload 'post-mode "post" "mode for e-mail" t)
+(add-to-list 'auto-mode-alist 
+             '("\\.*mutt-*\\|.article\\|\\.followup" 
+                . post-mode))
+(add-hook 'post-mode 'turn-off-auto-fill)
+;;(remove-hook 'post-mode-hook 'turn-on-auto-fill)
