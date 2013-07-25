@@ -22,5 +22,8 @@
 (add-to-list 'auto-mode-alist 
              '("\\.*mutt-*\\|.article\\|\\.followup" 
                 . post-mode))
-(add-hook 'post-mode 'turn-off-auto-fill)
+;;(add-hook 'post-mode 'turn-off-auto-fill)
 ;;(remove-hook 'post-mode-hook 'turn-on-auto-fill)
+
+(custom-set-variables
+'(post-uses-fill-mode nil))
