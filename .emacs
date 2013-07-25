@@ -1,4 +1,5 @@
 (add-to-list 'load-path "~/emacs")
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 (menu-bar-mode -1)
@@ -54,6 +55,7 @@
 (color-theme-initialize)
 (require 'zenburn)
 (zenburn)
+;;(load-theme 'zenburn t)
 
 ;;zeitgeist
 (require 'zeitgeist)
@@ -112,10 +114,10 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes (quote ("ac072b41249ee08594e0115ccbdc5197fcb517e680106d795201f4680bb8a6e4" "c310a90f20afb1d1aed5ace2a8605dbf55d2834136ab4a7b0b0fd6cc1f2f5f42" default)))
  '(org-agenda-files (quote ("~/Dropbox/org/lucas.org" "~/Dropbox/org/work.org" "~/Dropbox/org/gcal.org" "~/Dropbox/org/home.org" "~/Dropbox/org/articles.org")))
- '(org-mobile-files (quote ("~/Dropbox/org/home.org" "~/Dropbox/org/work.org" "~/Dropbox/org/gcal.org"
-"~/Dropbox/org/music.org")))
  '(org-mobile-agendas (quote ("y" "a" "t")))
+ '(org-mobile-files (quote ("~/Dropbox/org/home.org" "~/Dropbox/org/work.org" "~/Dropbox/org/gcal.org" "~/Dropbox/org/music.org")))
  '(post-uses-fill-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
