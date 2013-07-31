@@ -356,6 +356,7 @@ globalkeys = awful.util.table.join(
   awful.key({ modkey }, "e", function () exec("emacsclient -n -c -a ''") end),
   awful.key({ modkey }, "a", function () exec("keepass --auto-type") end),
   awful.key({ modkey }, "c", function () exec("google-chrome") end),
+  awful.key({ modkey }, "x", function () exec("firefox") end),
   awful.key({ modkey }, "`", function () scratch.drop("urxvt", "bottom", nil, nil, 0.30) end),
   awful.key({ modkey, "Shift"     }, "r", function () exec("urxvt -e ranger") end),
   awful.key({ modkey, "Shift"     }, "w", function () exec("urxvt -e ranger /home/rich/Downloads") end),
@@ -365,8 +366,8 @@ globalkeys = awful.util.table.join(
   
 
   --Volume manipulation
-  awful.key({}, "XF86AudioRaiseVolume", function() awful.util.spawn("amixer set Master 5+") end),
-  awful.key({}, "XF86AudioLowerVolume", function() awful.util.spawn("amixer set Master 5-") end),
+  awful.key({}, "XF86AudioRaiseVolume", function() awful.util.spawn("amixer set Master 5%+") end),
+  awful.key({}, "XF86AudioLowerVolume", function() awful.util.spawn("amixer set Master 5%-") end),
 
 
     -- Layout manipulation
@@ -402,13 +403,13 @@ globalkeys = awful.util.table.join(
     -- Prompt
     awful.key({ modkey },            "r",     function () mypromptbox[mouse.screen]:run() end),
 
-    awful.key({ modkey }, "x",
-              function ()
-                  awful.prompt.run({ prompt = "Run Lua code: " },
-                  mypromptbox[mouse.screen].widget,
-                  awful.util.eval, nil,
-                  awful.util.getdir("cache") .. "/history_eval")
-              end),
+    -- awful.key({ modkey }, "x",
+    --           function ()
+    --               awful.prompt.run({ prompt = "Run Lua code: " },
+    --               mypromptbox[mouse.screen].widget,
+    --               awful.util.eval, nil,
+    --               awful.util.getdir("cache") .. "/history_eval")
+    --           end),
     -- Menubar
     awful.key({ modkey }, "p", function() menubar.show() end)
 )
