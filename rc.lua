@@ -368,6 +368,9 @@ globalkeys = awful.util.table.join(
   --Volume manipulation
   awful.key({}, "XF86AudioRaiseVolume", function() awful.util.spawn("amixer set Master 5%+") end),
   awful.key({}, "XF86AudioLowerVolume", function() awful.util.spawn("amixer set Master 5%-") end),
+  awful.key({}, "XF86AudioPlay", function() awful.util.spawn("mpc toggle") end),
+  awful.key({}, "XF86AudioNext", function() awful.util.spawn("mpc next") end),
+  awful.key({}, "XF86AudioPrev", function() awful.util.spawn("mpc prev") end),
 
 
     -- Layout manipulation
