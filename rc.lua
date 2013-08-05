@@ -359,6 +359,7 @@ globalkeys = awful.util.table.join(
   awful.key({ modkey }, "x", function () exec("firefox") end),
   awful.key({ modkey }, "`", function () scratch.drop("urxvt", "bottom", nil, nil, 0.30) end),
   awful.key({}, "XF86Tools", function () scratch.drop("urxvt -e ncmpcpp", "bottom", nil, nil, 0.30) end),
+  awful.key({}, "XF86Mail",  function () exec("urxvt -e mutt") end),
   awful.key({ modkey, "Shift"     }, "r", function () exec("urxvt -e ranger") end),
   awful.key({ modkey, "Shift"     }, "w", function () exec("urxvt -e ranger /home/rich/Downloads") end),
   awful.key({ modkey, "Shift"     }, "p", function () exec("urxvt -depth 24 -e ranger /home/rich/Pictures") end),
