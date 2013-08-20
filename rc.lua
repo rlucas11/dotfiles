@@ -357,6 +357,7 @@ globalkeys = awful.util.table.join(
   awful.key({ modkey }, "a", function () exec("keepass --auto-type") end),
   awful.key({ modkey }, "c", function () exec("google-chrome") end),
   awful.key({ modkey }, "x", function () exec("firefox") end),
+  awful.key({ modkey }, "y", function () exec("keepass") end),
   awful.key({ modkey }, "`", function () scratch.drop("urxvt", "bottom", nil, nil, 0.30) end),
   awful.key({}, "XF86Tools", function () scratch.drop("urxvt -e ncmpcpp", "bottom", nil, nil, 0.30) end),
   awful.key({}, "XF86Mail",  function () exec("urxvt -e mutt") end),

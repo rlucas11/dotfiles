@@ -27,3 +27,5 @@
 
 (custom-set-variables
 '(post-uses-fill-mode nil))
+
+(global-visual-line-mode 1)
