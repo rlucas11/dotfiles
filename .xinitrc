@@ -18,7 +18,7 @@ fi
 #emacs --daemon &
 dropboxd & 
 #xcompmgr &
-compton --backend glx --paint-on-overlay --glx-no-stencil --vsync opengl-swc --unredir-if-possible
+compton --backend glx --paint-on-overlay --glx-no-stencil --vsync opengl-swc --unredir-if-possible &
 synapse &
 #SpiderOak &
 mpd &
