@@ -263,3 +263,7 @@
 ;; org-protocol
 (server-start)
 (require 'org-protocol)
+
+;; org-reveal
+(require 'ox-reveal)
+(setq org-reveal-root "file:///home/rich/Dropbox/LucasTalks")
