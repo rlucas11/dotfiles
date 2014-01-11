@@ -280,6 +280,9 @@
    [tab ?< ?p ?> ?\C-e ?< ?/ ?\C-f])
 (fset 'insert-li-tag
    [tab ?< ?l ?i ?> ?\C-e ?< ?/ ?\C-f])
+
+(global-set-key (kbd "C-c i") 'insert-li-tag)
+
 (fset 'insert-fragment-li-tag
    [tab ?< ?l ?i ?  ?c ?l ?a ?s ?s ?= ?? backspace ?? backspace ?? backspace ?\" ?f ?r ?a ?g ?m ?e ?n ?t ?\" ?> ?\C-e ?< ?/ ?\C-n])
 
@@ -287,5 +290,8 @@
 ;; web-mode
 (setq web-mode-extra-snippets
       '((nil . (("slide"  . ("<section>\n<h2>" . "</h2>\n<ul>\n</ul>\n</section>"))
+	        ("slide2" . ("<section>\n<h2>" . "</h2>\n<div class='grid_1'>\n</div>\n<div class='grid_1'>\n</div>\n<div class='clear'>&nbsp;</div>\n</div>\n</slide>"))
+		("imageSlide"  . ("<section>\n<h2>" . "</h2>\n<img src="assets/" width="100%" />\n</section>"))
+		("iclicker"  . ("<section>\n<h2>iclicker Question</h2>\n<p class="paragraph-left"></p>\n<ul class="iclicker-answers">\n" . "</ul>\n</section>"))
 	)))
 )
