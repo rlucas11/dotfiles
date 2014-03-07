@@ -293,5 +293,6 @@
 	        ("slide2" . ("<section>\n<h2>" . "</h2>\n<div class='container_2'>\n<div class='grid_1'>\n</div>\n<div class='grid_1'>\n</div>\n<div class='clear'>&nbsp;</div>\n</div>\n</section>"))
 		("imageSlide"  . ("<section>\n<h2>" . "</h2>\n<img src='assets/' width='100%' />\n</section>"))
 		("iclicker"  . ("<section>\n<h2>iclicker Question</h2>\n<p class='paragraph-left'></p>\n<ul class='iclicker-answers'>\n" . "</ul>\n</section>"))
+		("paragraph" . ("<p class='paragraph-left'>" . "</p>"))
 	)))
 )
