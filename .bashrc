@@ -9,6 +9,5 @@ alias ls='ls --color=auto'
 PS1='[\u@\h \W]\$ '
 
 alias paconky='/home/rich/scripts/paconky.py /home/rich/temp/pacman'
-alias mplus='wine mplus'
 
 PATH="${PATH}:/home/rich/.cabal/bin"

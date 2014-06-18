@@ -355,7 +355,7 @@ globalkeys = awful.util.table.join(
  --{{{ Applications
   awful.key({ modkey }, "e", function () exec("emacsclient -n -c -a ''") end),
   awful.key({ modkey }, "a", function () exec("keepass --auto-type") end),
-  awful.key({ modkey }, "c", function () exec("google-chrome") end),
+  awful.key({ modkey }, "c", function () exec("google-chrome-beta") end),
   awful.key({ modkey }, "x", function () exec("firefox") end),
   awful.key({ modkey }, "y", function () exec("keepass") end),
   awful.key({ modkey }, "`", function () scratch.drop("urxvt", "bottom", nil, nil, 0.30) end),
