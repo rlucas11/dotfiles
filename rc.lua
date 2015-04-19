@@ -261,9 +261,9 @@ for s = 1, screen.count() do
 
     -- Widgets that are aligned to the right
     local right_layout = wibox.layout.fixed.horizontal()
-    if s == 1 then right_layout:add(wibox.widget.systray()) end
+    if s == 2 then right_layout:add(wibox.widget.systray()) end
  --   if s == 2 then right_layout:add(musicwidget.widget) end
-    if s == 1 then right_layout:add(mytextclock) end
+    if s == 2 then right_layout:add(mytextclock) end
     right_layout:add(mylayoutbox[s])
 
     -- Now bring it all together (with the tasklist in the middle)
@@ -276,18 +276,21 @@ for s = 1, screen.count() do
 end
 
 -- Graphbox
-   mygraphbox = awful.wibox({ position = "bottom", height = 14, screen = 1 })
+   mygraphbox = awful.wibox({ position = "bottom", height = 14, screen = 2 })
 
    local left_graphbox = wibox.layout.fixed.horizontal()
 --   left_graphbox:add(mylauncher)
 --   left_graphbox:add(space)
-   -- left_graphbox:add(cpufreq0)
+   left_graphbox:add(cpufreq0)
    -- left_graphbox:add(cpugraph0)
+   left_graphbox:add(space)
    left_graphbox:add(cpupct0)
---    left_graphbox:add(cpufreq1)
+   left_graphbox:add(cpufreq1)
 --    left_graphbox:add(cpugraph1)
+   left_graphbox:add(space)
    left_graphbox:add(cpupct1)
---    left_graphbox:add(cpufreq2)
+   left_graphbox:add(cpufreq2)
+   left_graphbox:add(space)
 --    left_graphbox:add(cpugraph2)
    left_graphbox:add(cpupct2)
    left_graphbox:add(tab)
@@ -589,3 +592,4 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 -- awful.util.spawn("synapse")
 awful.util.spawn("SpiderOak")
 -- awful.util.spawn("mpd")
+awful.util.spawn("nitrogen --restore")

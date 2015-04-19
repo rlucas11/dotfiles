@@ -11,12 +11,12 @@ if [ -d /etc/X11/xinit/xinitrc.d ]; then
   unset f
 fi
 
-if [ -s ~/.Xmodmap ]; then 
-    xmodmap ~/.Xmodmap
-fi
+# if [ -s ~/.Xmodmap ]; then 
+#     xmodmap ~/.Xmodmap
+# fi
 
 #emacs --daemon &
-dropboxd & 
+dropbox & 
 #xcompmgr &
 compton --backend glx --paint-on-overlay --glx-no-stencil --vsync opengl-swc --unredir-if-possible &
 synapse &
