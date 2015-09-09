@@ -97,6 +97,7 @@
 (add-hook 'LaTeX-mode-hook 'turn-on-reftex) ; with AUCTeX LaTeX mode
 (setq reftex-default-bibliography '("/home/rich/Dropbox/MyLibrary.bib"))
 (setq reftex-bibliography-commands '("bibliography" "nobibliography" "addbibresource"))
+(setq reftex-cite-format 'natbib)
 
 (setq TeX-PDF-mode t)
 (global-visual-line-mode 1) ; 1 for on, 0 for off.
