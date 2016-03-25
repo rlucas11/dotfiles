@@ -19,8 +19,9 @@
 ;;recentf stuff
 (require 'recentf)
 (recentf-mode 1)
-(setq recentf-max-menu-items 50)
+(setq recentf-max-menu-items 25)
 (global-set-key "\C-x\ \C-r" 'recentf-open-files)
+(run-at-time nil (* 10 60) 'recentf-save-list)
 
 
 (defun toggle-window-split ()
@@ -50,12 +51,16 @@
 
 (define-key ctl-x-4-map "t" 'toggle-window-split)
 
-;;Color theme
-(require 'color-theme)
-(color-theme-initialize)
-(require 'zenburn)
-(zenburn)
+;; ;;Color theme
+;; (require 'color-theme)
+;; (color-theme-initialize)
+;; (require 'zenburn)
+;; (zenburn)
 ;;(load-theme 'zenburn t)
+
+
+(require 'tomorrow-night-eighties-theme)
+
 
 ;;zeitgeist
 (require 'zeitgeist)
@@ -66,7 +71,7 @@
 (ido-mode 1)
 
 ;;magit
-(require 'magit)
+;(require 'magit)
 
 ;;web-mode
 (require 'web-mode)
@@ -95,9 +100,19 @@
 (autoload 'reftex-mode "reftex" "RefTeX Minor Mode" t)
 (autoload 'turn-on-reftex "reftex" "RefTeX Minor Mode" nil)
 (add-hook 'LaTeX-mode-hook 'turn-on-reftex) ; with AUCTeX LaTeX mode
-(setq reftex-default-bibliography '("/home/rich/Dropbox/MyLibrary.bib"))
+(add-hook 'markdown-mode-hook 'turn-on-reftex)
+(setq reftex-default-bibliography '("/home/rich/Dropbox/MyLibraryZ.bib"))
 (setq reftex-bibliography-commands '("bibliography" "nobibliography" "addbibresource"))
-(setq reftex-cite-format 'natbib)
+;(setq reftex-cite-format 'natbib)
+
+(eval-after-load 'reftex-vars
+  '(progn
+     (setq reftex-cite-format '((?p . "[@%l]")
+				(?t . "@%l")
+				(?y . "[-@%l]")
+				(?e . "[e.g., @%l]")
+				(?s . "[see @%l]")))))
+
 
 (setq TeX-PDF-mode t)
 (global-visual-line-mode 1) ; 1 for on, 0 for off.
@@ -121,10 +136,16 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-safe-themes (quote ("ac072b41249ee08594e0115ccbdc5197fcb517e680106d795201f4680bb8a6e4" "c310a90f20afb1d1aed5ace2a8605dbf55d2834136ab4a7b0b0fd6cc1f2f5f42" default)))
- '(org-agenda-files (quote ("~/Dropbox/org/notes.org" "~/Dropbox/org/research_notes.org" "~/Dropbox/org/work.org" "~/Dropbox/org/gcal.org" "~/Dropbox/org/home.org" "~/Dropbox/org/articles.org")))
+ '(custom-safe-themes
+   (quote
+    ("5ee12d8250b0952deefc88814cf0672327d7ee70b16344372db9460e9a0e3ffc" "97538ac96539dea7b6ed9890e0d348f836f7638d721a5bc8aea075b774e2a6ff" "7f1263c969f04a8e58f9441f4ba4d7fb1302243355cb9faecb55aec878a06ee9" "52588047a0fe3727e3cd8a90e76d7f078c9bd62c0b246324e557dfa5112e0d0c" "cf08ae4c26cacce2eebff39d129ea0a21c9d7bf70ea9b945588c1c66392578d1" "1157a4055504672be1df1232bed784ba575c60ab44d8e6c7b3800ae76b42f8bd" "ac072b41249ee08594e0115ccbdc5197fcb517e680106d795201f4680bb8a6e4" "c310a90f20afb1d1aed5ace2a8605dbf55d2834136ab4a7b0b0fd6cc1f2f5f42" default)))
+ '(org-agenda-files
+   (quote
+    ("~/Dropbox/org/notes.org" "~/Dropbox/org/research_notes.org" "~/Dropbox/org/work.org" "~/Dropbox/org/gcal.org" "~/Dropbox/org/home.org" "~/Dropbox/org/articles.org")))
  '(org-mobile-agendas (quote ("y" "a" "t")))
- '(org-mobile-files (quote ("~/Dropbox/org/home.org" "~/Dropbox/org/work.org" "~/Dropbox/org/gcal.org" "~/Dropbox/org/music.org" "~/Dropbox/org/notes.org")))
+ '(org-mobile-files
+   (quote
+    ("~/Dropbox/org/home.org" "~/Dropbox/org/work.org" "~/Dropbox/org/gcal.org" "~/Dropbox/org/music.org" "~/Dropbox/org/notes.org")))
  '(post-uses-fill-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -257,26 +278,33 @@
 (setq auto-mode-alist (cons '("\.lua$" . lua-mode) auto-mode-alist))
 (autoload 'lua-mode "lua-mode" "Lua editing mode." t)
 
+;; markdown-mode
+(autoload 'markdown-mode "markdown-mode"
+   "Major mode for editing Markdown files" t)
+(add-to-list 'auto-mode-alist '("\\.text\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
 
-;; mutt
-;;(add-to-list 'auto-mode-alist '("/mutt" . mail-mode))
-(autoload 'post-mode "post" "mode for e-mail" t)
-(add-to-list 'auto-mode-alist 
-             '("\\.*mutt-*\\|.article\\|\\.followup" 
-                . post-mode))
-(add-hook 'post-mode 'turn-off-auto-fill)
-;;(remove-hook 'post-mode-hook 'turn-on-auto-fill)
+
+;; ;; mutt
+;; ;;(add-to-list 'auto-mode-alist '("/mutt" . mail-mode))
+;; (autoload 'post-mode "post" "mode for e-mail" t)
+;; (add-to-list 'auto-mode-alist 
+;;              '("\\.*mutt-*\\|.article\\|\\.followup" 
+;;                 . post-mode))
+;; (add-hook 'post-mode 'turn-off-auto-fill)
+;; ;;(remove-hook 'post-mode-hook 'turn-on-auto-fill)
 
 ;; org-protocol
 (server-start)
 (require 'org-protocol)
 
-;; org-reveal
-(require 'ox-reveal)
-(setq org-reveal-root "file:///home/rich/Dropbox/LucasTalks")
+;; ;; org-reveal
+;; (require 'ox-reveal)
+;; (setq org-reveal-root "file:///home/rich/Dropbox/LucasTalks")
 
 
-;; macros
+;; macros  (for web-mode)
 (fset 'insert-p-tag
    [tab ?< ?p ?> ?\C-e ?< ?/ ?\C-f])
 (fset 'insert-li-tag
@@ -297,3 +325,26 @@
 		("paragraph" . ("<p class='paragraph-left'>" . "</p>"))
 	)))
 )
+
+
+;; MELBA
+
+(require 'package)
+(add-to-list 'package-archives
+             '("melpa" . "https://melpa.org/packages/") t)
+(when (< emacs-major-version 24)
+  ;; For important compatibility libraries like cl-lib
+  (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/")))
+(package-initialize)
+
+
+;; Polymode & RMD Files
+
+(setq load-path
+      (append '("path/to/polymode/"  "path/to/polymode/modes")
+              load-path))
+
+(require 'poly-R)
+(require 'poly-markdown)
+
+(add-to-list 'auto-mode-alist '("\\.Rmd" . poly-markdown+r-mode))

@@ -30,8 +30,8 @@ volumeicon &
 #xset +fp /usr/share/fonts/local
 #xset fp rehash
 
-exec awesome
-#exec i3
+#exec awesome
+exec i3
 
 #DEFAULT_SESSION=awesome
 
