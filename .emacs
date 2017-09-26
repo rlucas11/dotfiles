@@ -101,7 +101,7 @@
 (autoload 'turn-on-reftex "reftex" "RefTeX Minor Mode" nil)
 (add-hook 'LaTeX-mode-hook 'turn-on-reftex) ; with AUCTeX LaTeX mode
 (add-hook 'markdown-mode-hook 'turn-on-reftex)
-(setq reftex-default-bibliography '("/home/rich/Dropbox/MyLibraryZ.bib"))
+(setq reftex-default-bibliography '("/home/rich/Dropbox/MyLibraryZ2.bib"))
 (setq reftex-bibliography-commands '("bibliography" "nobibliography" "addbibresource"))
 ;(setq reftex-cite-format 'natbib)
 
@@ -111,6 +111,7 @@
 				(?t . "@%l")
 				(?y . "[-@%l]")
 				(?e . "[e.g., @%l]")
+				(?b . "\\bibentry{%l}")
 				(?s . "[see @%l]")))))
 
 
@@ -146,6 +147,7 @@
  '(org-mobile-files
    (quote
     ("~/Dropbox/org/home.org" "~/Dropbox/org/work.org" "~/Dropbox/org/gcal.org" "~/Dropbox/org/music.org" "~/Dropbox/org/notes.org")))
+ '(package-selected-packages (quote (polymode markdown-preview-mode)))
  '(post-uses-fill-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -262,7 +264,6 @@
 (org-babel-do-load-languages
  'org-babel-load-languages
  '(
-   (sh . t)
    (python . t)
    (R . t)
    (ruby . t)
