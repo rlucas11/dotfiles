@@ -142,12 +142,14 @@
     ("5ee12d8250b0952deefc88814cf0672327d7ee70b16344372db9460e9a0e3ffc" "97538ac96539dea7b6ed9890e0d348f836f7638d721a5bc8aea075b774e2a6ff" "7f1263c969f04a8e58f9441f4ba4d7fb1302243355cb9faecb55aec878a06ee9" "52588047a0fe3727e3cd8a90e76d7f078c9bd62c0b246324e557dfa5112e0d0c" "cf08ae4c26cacce2eebff39d129ea0a21c9d7bf70ea9b945588c1c66392578d1" "1157a4055504672be1df1232bed784ba575c60ab44d8e6c7b3800ae76b42f8bd" "ac072b41249ee08594e0115ccbdc5197fcb517e680106d795201f4680bb8a6e4" "c310a90f20afb1d1aed5ace2a8605dbf55d2834136ab4a7b0b0fd6cc1f2f5f42" default)))
  '(org-agenda-files
    (quote
-    ("~/Dropbox/org/notes.org" "~/Dropbox/org/research_notes.org" "~/Dropbox/org/work.org" "~/Dropbox/org/gcal.org" "~/Dropbox/org/home.org" "~/Dropbox/org/articles.org")))
+    ("~/Dropbox/org/notes.org" "~/Dropbox/org/work.org" "~/Dropbox/org/gcal.org" "~/Dropbox/org/home.org")))
  '(org-mobile-agendas (quote ("y" "a" "t")))
  '(org-mobile-files
    (quote
     ("~/Dropbox/org/home.org" "~/Dropbox/org/work.org" "~/Dropbox/org/gcal.org" "~/Dropbox/org/music.org" "~/Dropbox/org/notes.org")))
- '(package-selected-packages (quote (polymode markdown-preview-mode)))
+ '(package-selected-packages
+   (quote
+    (web-mode org-fstree polymode markdown-preview-mode)))
  '(post-uses-fill-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -194,47 +196,47 @@
         ;; ... more templates here ...
         )))
 
-;; automatically push org-mobile
-(defvar org-mobile-push-timer nil
-  "Timer that `org-mobile-push-timer' used to reschedule itself, or nil.")
+;; ;; automatically push org-mobile
+;; (defvar org-mobile-push-timer nil
+;;   "Timer that `org-mobile-push-timer' used to reschedule itself, or nil.")
 
-(defun org-mobile-push-with-delay (secs) 
-  (when org-mobile-push-timer
-    (cancel-timer org-mobile-push-timer))
-  (setq org-mobile-push-timer
-        (run-with-idle-timer
-         (* 1 secs) nil 'org-mobile-push)))
+;; (defun org-mobile-push-with-delay (secs) 
+;;   (when org-mobile-push-timer
+;;     (cancel-timer org-mobile-push-timer))
+;;   (setq org-mobile-push-timer
+;;         (run-with-idle-timer
+;;          (* 1 secs) nil 'org-mobile-push)))
 
-(add-hook 'after-save-hook 
- (lambda () 
-   (when (eq major-mode 'org-mode)
-     (dolist (file (org-mobile-files-alist))
-       (if (string= (expand-file-name (car file)) (buffer-file-name))
-           (org-mobile-push-with-delay 30)))
-   )))
+;; (add-hook 'after-save-hook 
+;;  (lambda () 
+;;    (when (eq major-mode 'org-mode)
+;;      (dolist (file (org-mobile-files-alist))
+;;        (if (string= (expand-file-name (car file)) (buffer-file-name))
+;;            (org-mobile-push-with-delay 30)))
+;;    )))
 
-(run-at-time "00:05" 86400 '(lambda () (org-mobile-push-with-delay 1))) ;; refreshes agenda file each day
+;; (run-at-time "00:05" 86400 '(lambda () (org-mobile-push-with-delay 1))) ;; refreshes agenda file each day
 
-;; automatically pull org-mobile
-(org-mobile-pull) ;; run org-mobile-pull at startup
+;; ;; automatically pull org-mobile
+;; (org-mobile-pull) ;; run org-mobile-pull at startup
 
-(defun install-monitor (file secs)
-  (run-with-timer
-   0 secs
-   (lambda (f p)
-     (unless (< p (second (time-since (elt (file-attributes f) 5))))
-       (org-mobile-pull)))
-   file secs))
+;; (defun install-monitor (file secs)
+;;   (run-with-timer
+;;    0 secs
+;;    (lambda (f p)
+;;      (unless (< p (second (time-since (elt (file-attributes f) 5))))
+;;        (org-mobile-pull)))
+;;    file secs))
 
-(install-monitor (file-truename
-                  (concat
-                   (file-name-as-directory org-mobile-directory)
-                          org-mobile-capture-file))
-                 5)
+;; (install-monitor (file-truename
+;;                   (concat
+;;                    (file-name-as-directory org-mobile-directory)
+;;                           org-mobile-capture-file))
+;;                  5)
 
-;; Do a pull every 5 minutes to circumvent problems with timestamping
-;; (ie. dropbox bugs)
-(run-with-timer 0 (* 30 60) 'org-mobile-pull)
+;; ;; Do a pull every 5 minutes to circumvent problems with timestamping
+;; ;; (ie. dropbox bugs)
+;; (run-with-timer 0 (* 30 60) 'org-mobile-pull)
 
 ;; Resume clocking task when emacs is restarted
 (org-clock-persistence-insinuate)
@@ -265,6 +267,7 @@
  'org-babel-load-languages
  '(
    (python . t)
+   (sh . t)
    (R . t)
    (ruby . t)
    (ditaa . t)
@@ -310,8 +313,12 @@
    [tab ?< ?p ?> ?\C-e ?< ?/ ?\C-f])
 (fset 'insert-li-tag
    [tab ?< ?l ?i ?> ?\C-e ?< ?/ ?\C-f])
+(fset 'insert-fragment
+   " class=\"fragment\"")
+
 
 (global-set-key (kbd "C-c i") 'insert-li-tag)
+(global-set-key (kbd "C-c f") 'insert-fragment)
 
 (fset 'insert-fragment-li-tag
    [tab ?< ?l ?i ?  ?c ?l ?a ?s ?s ?= ?? backspace ?? backspace ?? backspace ?\" ?f ?r ?a ?g ?m ?e ?n ?t ?\" ?> ?\C-e ?< ?/ ?\C-n])
@@ -321,7 +328,8 @@
 (setq web-mode-extra-snippets
       '((nil . (("slide"  . ("<section>\n<h2>" . "</h2>\n<ul>\n</ul>\n</section>"))
 	        ("slide2" . ("<section>\n<h2>" . "</h2>\n<div class='container_2'>\n<div class='grid_1'>\n</div>\n<div class='grid_1'>\n</div>\n<div class='clear'>&nbsp;</div>\n</div>\n</section>"))
-		("imageSlide"  . ("<section>\n<h2>" . "</h2>\n<img src='assets/' width='100%' />\n</section>"))
+		("imageSlide"  . ("<section>\n<h2>" . "</h2>\n<img src='../assets/' width='100%' />\n</section>"))
+		("aside"  . ("<aside class='notes'>\n" . "\n</aside>"))
 		("iclicker"  . ("<section>\n<h2>iclicker Question</h2>\n<p class='paragraph-left'></p>\n<ul class='iclicker-answers'>\n" . "</ul>\n</section>"))
 		("paragraph" . ("<p class='paragraph-left'>" . "</p>"))
 	)))
@@ -349,3 +357,7 @@
 (require 'poly-markdown)
 
 (add-to-list 'auto-mode-alist '("\\.Rmd" . poly-markdown+r-mode))
+
+
+;; FSTREE
+(require 'org-fstree)
