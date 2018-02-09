@@ -149,7 +149,7 @@
     ("~/Dropbox/org/home.org" "~/Dropbox/org/work.org" "~/Dropbox/org/gcal.org" "~/Dropbox/org/music.org" "~/Dropbox/org/notes.org")))
  '(package-selected-packages
    (quote
-    (web-mode org-fstree polymode markdown-preview-mode)))
+    (atomic-chrome web-mode org-fstree polymode markdown-preview-mode)))
  '(post-uses-fill-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -361,3 +361,9 @@
 
 ;; FSTREE
 (require 'org-fstree)
+
+
+;; Atomic for chrome
+(require 'atomic-chrome)
+(atomic-chrome-start-server)
+(setq atomic-chrome-buffer-open-style 'split)
