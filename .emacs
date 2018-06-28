@@ -82,6 +82,11 @@
 ;; ESS
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (require 'ess-site)
+(setq ess-smart-S-assign-key ":")
+(ess-toggle-S-assign nil)
+(ess-toggle-S-assign nil)
+
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; LaTeX
@@ -142,14 +147,14 @@
     ("5ee12d8250b0952deefc88814cf0672327d7ee70b16344372db9460e9a0e3ffc" "97538ac96539dea7b6ed9890e0d348f836f7638d721a5bc8aea075b774e2a6ff" "7f1263c969f04a8e58f9441f4ba4d7fb1302243355cb9faecb55aec878a06ee9" "52588047a0fe3727e3cd8a90e76d7f078c9bd62c0b246324e557dfa5112e0d0c" "cf08ae4c26cacce2eebff39d129ea0a21c9d7bf70ea9b945588c1c66392578d1" "1157a4055504672be1df1232bed784ba575c60ab44d8e6c7b3800ae76b42f8bd" "ac072b41249ee08594e0115ccbdc5197fcb517e680106d795201f4680bb8a6e4" "c310a90f20afb1d1aed5ace2a8605dbf55d2834136ab4a7b0b0fd6cc1f2f5f42" default)))
  '(org-agenda-files
    (quote
-    ("~/Dropbox/org/notes.org" "~/Dropbox/org/work.org" "~/Dropbox/org/gcal.org" "~/Dropbox/org/home.org")))
+    ("~/Dropbox/org/notes.org" "~/Dropbox/org/work.org" "~/Dropbox/org/gcal.org" "~/Dropbox/org/home.org" "~/Dropbox/org/recipes.org")))
  '(org-mobile-agendas (quote ("y" "a" "t")))
  '(org-mobile-files
    (quote
     ("~/Dropbox/org/home.org" "~/Dropbox/org/work.org" "~/Dropbox/org/gcal.org" "~/Dropbox/org/music.org" "~/Dropbox/org/notes.org")))
  '(package-selected-packages
    (quote
-    (atomic-chrome web-mode org-fstree polymode markdown-preview-mode)))
+    (ranger atomic-chrome web-mode polymode markdown-preview-mode)))
  '(post-uses-fill-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -195,6 +200,15 @@
 	 "* TODO %?\n %i\n %a")
         ;; ... more templates here ...
         )))
+
+
+;; Opening files
+
+(setq org-file-apps
+    '(("\\.docx\\'" . "lowriter %s")
+      ("\\.x?html?\\'" . default)
+      ("\\.pdf\\'" . "zathura %s")
+      (auto-mode . emacs)))
 
 ;; ;; automatically push org-mobile
 ;; (defvar org-mobile-push-timer nil
@@ -262,20 +276,20 @@
 ;; Include current clocking task in clock reports
 (setq org-clock-report-include-clocking-task t)
 
-;; org-bable
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '(
-   (python . t)
-   (sh . t)
-   (R . t)
-   (ruby . t)
-   (ditaa . t)
-   (dot . t)
-   (octave . t)
-   (sqlite . t)
-   (perl . t)
-   ))
+;; ;; org-bable
+;; (org-babel-do-load-languages
+;;  'org-babel-load-languages
+;;  '(
+;;    (python . t)
+;;    (sh . t)
+;;    (R . t)
+;;    (ruby . t)
+;;    (ditaa . t)
+;;    (dot . t)
+;;    (octave . t)
+;;    (sqlite . t)
+;;    (perl . t)
+;;    ))
 
 
 ;; lua-mode
@@ -310,15 +324,18 @@
 
 ;; macros  (for web-mode)
 (fset 'insert-p-tag
-   [tab ?< ?p ?> ?\C-e ?< ?/ ?\C-f])
+      [tab ?< ?p ?> ?\C-e ?< ?/ ?\C-f])
 (fset 'insert-li-tag
-   [tab ?< ?l ?i ?> ?\C-e ?< ?/ ?\C-f])
+      [tab ?< ?l ?i ?> ?\C-e ?< ?/ ?\C-f])
+;;(fset 'insert-li-tag2
+;;      [tab ?< ?l ?i ?> ?\M-e ?< ?/ ?\C-f])
 (fset 'insert-fragment
-   " class=\"fragment\"")
+      " class=\"fragment\"")
 
 
 (global-set-key (kbd "C-c i") 'insert-li-tag)
 (global-set-key (kbd "C-c f") 'insert-fragment)
+;;(global-set-key (kbd "C-u C-c i") 'insert-li-tag)
 
 (fset 'insert-fragment-li-tag
    [tab ?< ?l ?i ?  ?c ?l ?a ?s ?s ?= ?? backspace ?? backspace ?? backspace ?\" ?f ?r ?a ?g ?m ?e ?n ?t ?\" ?> ?\C-e ?< ?/ ?\C-n])
@@ -329,7 +346,7 @@
       '((nil . (("slide"  . ("<section>\n<h2>" . "</h2>\n<ul>\n</ul>\n</section>"))
 	        ("slide2" . ("<section>\n<h2>" . "</h2>\n<div class='container_2'>\n<div class='grid_1'>\n</div>\n<div class='grid_1'>\n</div>\n<div class='clear'>&nbsp;</div>\n</div>\n</section>"))
 		("imageSlide"  . ("<section>\n<h2>" . "</h2>\n<img src='assets/' width='100%' />\n</section>"))
-		("aside"  . ("<aside class='notes'>\n<ul>\n<li>" . "</li>\n</ul>\n</aside>"))
+		("aside"  . ("<aside class='notes'>\n<ul>\n" . "\n</ul>\n</aside>"))
 		("iclicker"  . ("<section>\n<h2>iclicker Question</h2>\n<p class='paragraph-left'></p>\n<ul class='iclicker-answers'>\n" . "</ul>\n</section>"))
 		("paragraph" . ("<p class='paragraph-left'>" . "</p>"))
 	)))
@@ -349,9 +366,9 @@
 
 ;; Polymode & RMD Files
 
-(setq load-path
-      (append '("path/to/polymode/"  "path/to/polymode/modes")
-              load-path))
+;;(setq load-path
+;;      (append '("path/to/polymode/"  "path/to/polymode/modes")
+;;              load-path))
 
 (require 'poly-R)
 (require 'poly-markdown)
@@ -359,8 +376,6 @@
 (add-to-list 'auto-mode-alist '("\\.Rmd" . poly-markdown+r-mode))
 
 
-;; FSTREE
-(require 'org-fstree)
 
 
 ;; Atomic for chrome

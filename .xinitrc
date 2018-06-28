@@ -17,6 +17,8 @@ fi
 #     xmodmap ~/.Xmodmap
 # fi
 
+export QT_AUTO_SCREEN_SCALE_FACTOR=1
+
 #emacs --daemon &
 #xcompmgr &
 #SpiderOak &
@@ -33,6 +35,7 @@ mpd &
 #xset fp rehash
 
 #exec awesome
+xrandr --dpi 168
 exec i3
 #exec gnome-session
 
