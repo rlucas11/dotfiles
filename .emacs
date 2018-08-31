@@ -4,6 +4,18 @@
 (scroll-bar-mode -1)
 (menu-bar-mode -1)
 
+
+;; poly mode
+(add-to-list 'load-path "~/emacs/polymode/modes")
+(add-to-list 'load-path "~/emacs/polymode/")
+(require 'poly-R)
+(require 'poly-markdown)
+(add-to-list 'auto-mode-alist '("\\.Rmd" . poly-markdown+r-mode))
+(autoload 'r-mode "ess-site.el" "Major mode for editing R source." t)
+
+
+
+
 ;; open with single window
 (setq inhibit-startup-screen t)
 (add-hook 'emacs-startup-hook 'delete-other-windows)
@@ -81,10 +93,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ESS
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(require 'ess-site)
-(setq ess-smart-S-assign-key ":")
-(ess-toggle-S-assign nil)
-(ess-toggle-S-assign nil)
+;;(require 'ess-site)
+;;(setq ess-smart-S-assign-key ":")
+;;(ess-toggle-S-assign nil)
+;;(ess-toggle-S-assign nil)
 
 
 
@@ -154,7 +166,7 @@
     ("~/Dropbox/org/home.org" "~/Dropbox/org/work.org" "~/Dropbox/org/gcal.org" "~/Dropbox/org/music.org" "~/Dropbox/org/notes.org")))
  '(package-selected-packages
    (quote
-    (ranger atomic-chrome web-mode polymode markdown-preview-mode)))
+    (ess ess-smart-underscore ranger atomic-chrome web-mode markdown-preview-mode)))
  '(post-uses-fill-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -364,17 +376,6 @@
 (package-initialize)
 
 
-;; Polymode & RMD Files
-
-;;(setq load-path
-;;      (append '("path/to/polymode/"  "path/to/polymode/modes")
-;;              load-path))
-
-(require 'poly-R)
-(require 'poly-markdown)
-
-(add-to-list 'auto-mode-alist '("\\.Rmd" . poly-markdown+r-mode))
-
 
 
 
@@ -382,3 +383,10 @@
 (require 'atomic-chrome)
 (atomic-chrome-start-server)
 (setq atomic-chrome-buffer-open-style 'split)
+
+
+;; Change underscore behavior for ESS
+(require 'ess-site)
+(ess-toggle-underscore t)
+(global-set-key (kbd "M--")  (lambda () (interactive) (insert " <- ")))
+(ess-toggle-underscore nil)
