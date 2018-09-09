@@ -87,6 +87,7 @@
   :config
   (progn
     (setq org-directory "~/Dropbox/org")
+    (setq org-refile-targets (quote ((org-agenda-files :regexp . "*"))))
     (setq org-agenda-files
 	  (quote
 	   ("~/Dropbox/org/notes.org" "~/Dropbox/org/work.org" "~/Dropbox/org/gcal.org" "~/Dropbox/org/home.org" "~/Dropbox/org/recipes.org")))
