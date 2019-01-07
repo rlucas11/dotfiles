@@ -1,10 +1,13 @@
 ;; Appearance and Startup Behavior
 
+(set-frame-parameter (selected-frame) 'alpha '(92 . 90))
+(add-to-list 'default-frame-alist '(alpha . (92 .90)))
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 (menu-bar-mode -1)
 (global-visual-line-mode 1) ; 1 for on, 0 for off.
 (setq x-select-enable-clipboard t)
+(server-start)
 
 
 ;; open with single window
@@ -24,6 +27,7 @@
 ;;(global-set-key "\C-cl" 'org-store-link)
 ;;(global-set-key "\C-ca" 'org-agenda)
 ;;(global-set-key "\C-cb" 'org-iswitchb)
+
 
 
 
@@ -65,6 +69,12 @@
   :config
   (setf custom-safe-themes t)
   (color-theme-sanityinc-tomorrow-eighties))
+
+;; (use-package nord-theme
+;;   :ensure t)
+
+;; (use-package zenburn-theme
+;;   :ensure t)
 
 
 ;; ido
@@ -153,6 +163,14 @@
 (use-package org-habit
   :ensure nil)
 
+(require `org-protocol)
+
+;; yasnippet
+(use-package yasnippet
+  :ensure t
+  :config
+  (yas-global-mode 1)
+  (setq yas-snippet-dirs '("~/.emacs.d/snippets")))
 
 ;; ESS
 (use-package ess
@@ -219,3 +237,31 @@
 	" class=\"fragment\"")
   )
 
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-enabled-themes (quote (sanityinc-tomorrow-eighties)))
+ '(custom-safe-themes
+   (quote
+    ("628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" default)))
+ '(package-selected-packages
+   (quote
+    (pdf-tools tablist zenburn-theme nord-theme web-mode use-package ranger poly-noweb poly-markdown poly-R paradox org markdown-preview-mode julia-mode ess color-theme-sanityinc-tomorrow auctex))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+
+
+;; tablist
+(use-package tablist)
+
+;; pdf-tools
+(use-package pdf-tools
+  ensure: t
+  )
+(pdf-tools-install)
