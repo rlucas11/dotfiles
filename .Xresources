@@ -1,0 +1,105 @@
+! ! ------------------------------------------------------------------------------
+! ! ROFI Color theme
+! ! ------------------------------------------------------------------------------
+! ! Use extended color scheme
+! rofi.color-enabled:                  true
+! ! Color scheme for normal row
+! rofi.color-normal:                   #ffffff,#525d76,#f5f5f5,#5294e2,#ffffff
+! ! Color scheme for urgent row
+! rofi.color-urgent:                   #ffffff,#dc322f,#f5f5f5,#5294e2,#dc322f
+! ! Color scheme for active row
+! rofi.color-active:                   #ffffff,#c2cad0,#f5f5f5,#5294e2,#c2cad0
+! ! Color scheme window
+! rofi.color-window:                   #ffffff,#f5f5f5
+! ! Separator style (none, dash, solid)
+! rofi.separator-style:                solid
+
+Xft.dpi:                             168
+Xcursor.size:                        32
+
+
+!URxvt*transparent:true
+!URxvt*scrollBar:false
+!URxvt*borderLess:true
+!URxvt*foreground:Black
+
+!{{{ URXVT
+!
+! General
+URxvt*geometry:		  200x50
+URxvt*termName:           rxvt-unicode-256color
+URxvt*loginShell:         true
+URxvt*scrollBar:         false
+URxvt*secondaryScroll:    true
+URxvt*saveLines:         65535
+URxvt*cursorBlink:       false
+!URxvt*cursorUnderline:   true
+URxvt*urgentOnBell:       true
+!URxvt*override-redirect:false
+!URxvt*borderLess:       false
+!URxvt*internalBorder:       0
+!URxvt*externalBorder:       0
+URxvt.depth: 32
+URxvt.background: rgba:1111/1111/1111/dddd
+!
+! Extensions
+!URxvt*perl-lib:        /usr/lib/URxvt/perl/
+!URxvt*perl-ext-common: default,matcher,searchable-scrollback
+URxvt*urlLauncher:     /usr/local/bin/firefox
+URxvt*matcher.button:  1
+! Catch ugly URLs
+URxvt*cutchars:        '"'()*<>[]{|}
+!
+! Appearance
+!URxvt*font:     -xos4-terminus-medium-*-*-*-12-*-*-*-*-*-iso8859-2
+!URxvt*boldFont: -xos4-terminus-bold-*-*-*-12-*-*-*-*-*-iso8859-2
+URxvt*font: xft:Inconsolata:size=12
+URxvt.letterSpace: -2
+!
+! Cursor
+!URxvt*cursorColor: #DCDCCC
+URxvt*cursorColor: #cccccc
+! URLs
+URxvt*.colorUL:    #ffffff
+!
+! Pseudo Transparency
+!URxvt*shading:    50
+!URxvt*transparent:true
+! 
+! Zenburn color-scheme
+!URxvt*background:  #3f3f3f
+!URxvt*foreground:  #dcdccc
+URxvt*background:  #2d2d2d
+URxvt*foreground:  #cccccc
+
+! black + red
+!URxvt*color0:     #3f3f3f
+URxvt*color0:      #1E2320
+!URxvt*color1:      #705050
+URxvt*color1:      #f2777a
+! green + yellow
+!URxvt*color2:      #60b48a
+!URxvt*color3:      #dfaf8f
+URxvt*color2:      #99cc99
+URxvt*color3:      #ffcc66
+! blue + purple
+!URxvt*color4:      #506070
+!URxvt*color5:      #dc8cc3
+URxvt*color4:      #6699cc
+URxvt*color5:      #cc99cc
+! cyan + white
+URxvt*color6:      #8cd0d3
+URxvt*color7:      #dcdccc
+! bright-black + bright-red
+URxvt*color8:      #709080
+URxvt*color9:      #dca3a3
+! bright-green + bright-yellow
+URxvt*color10:     #c3bf9f
+URxvt*color11:     #f0dfaf
+! bright-blue + bright-purple
+URxvt*color12:     #94bff3
+URxvt*color13:     #ec93d3
+! bright-cyan + bright-white
+URxvt*color14:     #93e0e3
+URxvt*color15:     #ffffff
+!}}}

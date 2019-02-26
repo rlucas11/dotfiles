@@ -9,6 +9,8 @@
 (setq x-select-enable-clipboard t)
 (server-start)
 
+(set-frame-font "Inconsolata-12")
+
 
 ;; open with single window
 (setq inhibit-startup-screen t)
@@ -262,6 +264,6 @@
 
 ;; pdf-tools
 (use-package pdf-tools
-  ensure: t
+  ensure t
   )
 (pdf-tools-install)

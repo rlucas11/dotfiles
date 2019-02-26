@@ -26,7 +26,7 @@ export QT_AUTO_SCREEN_SCALE_FACTOR=1
 #volumeicon &
 
 dropbox & 
-compton --backend glx --paint-on-overlay --glx-no-stencil --vsync opengl-swc --unredir-if-possible &
+compton --backend glx --glx-no-stencil --vsync opengl-swc --unredir-if-possible --blur-background &
 # synapse &
 mpd &
 /usr/bin/gnome-keyring-daemon --start --components=gpg,pkcs11,secrets,ssh
