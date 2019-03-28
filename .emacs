@@ -10,6 +10,8 @@
 (server-start)
 
 (set-frame-font "Inconsolata-12")
+(when (fboundp 'windmove-default-keybindings)
+  (windmove-default-keybindings))
 
 
 ;; open with single window
@@ -126,6 +128,11 @@
          :empty-lines 1)
 	("t"
 	 "TODO Template"
+	 entry
+	 (file+headline "~/Dropbox/org/capture.org" "Tasks")
+	 "* TODO %?\n %i\n")
+	("e"
+	 "Email TODO Template"
 	 entry
 	 (file+headline "~/Dropbox/org/capture.org" "Tasks")
 	 "* TODO %?\n %i\n %a")
@@ -250,7 +257,7 @@
     ("628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" default)))
  '(package-selected-packages
    (quote
-    (pdf-tools tablist zenburn-theme nord-theme web-mode use-package ranger poly-noweb poly-markdown poly-R paradox org markdown-preview-mode julia-mode ess color-theme-sanityinc-tomorrow auctex))))
+    (mu4e-alert shell-pop pdf-tools tablist zenburn-theme nord-theme web-mode use-package ranger poly-noweb poly-markdown poly-R paradox org markdown-preview-mode julia-mode ess color-theme-sanityinc-tomorrow auctex))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -264,6 +271,74 @@
 
 ;; pdf-tools
 (use-package pdf-tools
-  ensure t
+  :ensure t
   )
 (pdf-tools-install)
+
+
+;; company-mode
+(use-package company
+  :ensure t
+  :init (add-hook 'after-init-hook 'global-company-mode)
+  )
+
+
+;; shell-pop
+(use-package shell-pop
+  :ensure t
+  :bind (("C-t" . shell-pop))
+  :config
+  )
+
+;; mu4e
+(use-package mu4e
+  :ensure nil
+  :init
+  (add-hook 'mu4e-view-mode-hook #'visual-line-mode)
+  (setq mu4e-compose-format-flowed t)
+  (add-hook 'mu4e-compose-mode-hook (lambda () (use-hard-newlines -1)))
+  (setq mu4e-compose-in-new-frame t)
+  :custom
+  (mail-user-agent 'mu4e-user-agent)
+  (mu4e-user-mail-address-list '("lucasri@msu.edu"))
+  (mu4e-reply-to-address "lucasri@msu.edu")
+  (user-mail-address "lucasri@msu.edu")
+  (user-full-name "Richard E. Lucas")
+  (mu4e-attachment-dir "~/Downloads")
+  (mu4e-maildir "~/Maildir")
+  (mu4e-drafts-folder "/Drafts")
+  (mu4e-get-mail-command "true")
+  (mu4e-refile-folder "/Archive")
+  (mu4e-sent-folder "/Sent")
+  (mu4e-trash-folder "/Trash")
+  (mu4e-update-interval 300)
+  (mu4e-use-fancy-chars t)
+  (mu4e-view-show-addresses t)
+  (mu4e-view-show-images t)
+  (mu4e-maildir-shortcuts
+   '(("/INBOX" . ?i)
+     ("/Archive" . ?a)
+     ("/Trash" . ?t)
+     ("/Drafts" . ?d)
+     ("/Sent" . ?s)))
+  (message-send-mail-function 'smtpmail-send-it)
+  (smtpmail-default-smtp-server "localhost")
+  (smtpmail-smtp-server "localhost")
+  (smtpmail-local-domain "localhost")
+  (smtpmail-smtp-service 1025)
+  )
+
+(require 'org-mu4e)
+
+(use-package mu4e-alert
+  :ensure t
+  :after mu4e
+  :hook ((after-init . mu4e-alert-enable-mode-line-display)
+	 (after-init . mu4e-alert-enable-notifications))
+  :config
+  (mu4e-alert-set-default-style 'libnotify)
+  :init
+  (setq mu4e-alert-interesting-mail-query
+   (concat
+    "flag:unread maildir:/INBOX"))
+  )
