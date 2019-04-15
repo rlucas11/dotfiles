@@ -85,9 +85,10 @@
 (use-package ido
   :ensure t
   :config
-  (setq ido-enable-flex-matching t)
-  (setq ido-everywhere t)
-  (ido-mode 1))
+;;  (setq ido-enable-flex-matching t)
+;;  (setq ido-everywhere t)
+  ;;  (ido-mode 1)
+  )
 
 
 ;; org
@@ -104,7 +105,13 @@
     (setq org-refile-targets (quote ((org-agenda-files :regexp . "*"))))
     (setq org-agenda-files
 	  (quote
-	   ("~/Dropbox/org/notes.org" "~/Dropbox/org/work.org" "~/Dropbox/org/gcal.org" "~/Dropbox/org/home.org" "~/Dropbox/org/recipes.org")))
+	   ("~/Dropbox/org/notes.org"
+	    "~/Dropbox/org/work.org"
+	    "~/Dropbox/org/gcal.org"
+	    "~/Dropbox/org/home.org"
+	    "~/Dropbox/org/research.org"
+	    "~/Dropbox/org/peerReview.org"
+	    "~/Dropbox/org/recipes.org")))
     (setq org-default-notes-file "~/Dropbox/org/notes.org")
     (setq org-agenda-custom-commands
           '(("c" "Agenda and TODO tasks"
@@ -257,7 +264,7 @@
     ("628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" default)))
  '(package-selected-packages
    (quote
-    (mu4e-alert shell-pop pdf-tools tablist zenburn-theme nord-theme web-mode use-package ranger poly-noweb poly-markdown poly-R paradox org markdown-preview-mode julia-mode ess color-theme-sanityinc-tomorrow auctex))))
+    (helm-chrome helm-google helm mu4e-alert shell-pop pdf-tools tablist zenburn-theme nord-theme web-mode use-package ranger poly-noweb poly-markdown poly-R paradox org markdown-preview-mode julia-mode ess color-theme-sanityinc-tomorrow auctex))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -287,17 +294,19 @@
 (use-package shell-pop
   :ensure t
   :bind (("C-t" . shell-pop))
-  :config
+  :config 
   )
 
 ;; mu4e
 (use-package mu4e
   :ensure nil
+  :bind ("C-c e" . mu4e)
   :init
   (add-hook 'mu4e-view-mode-hook #'visual-line-mode)
   (setq mu4e-compose-format-flowed t)
   (add-hook 'mu4e-compose-mode-hook (lambda () (use-hard-newlines -1)))
   (setq mu4e-compose-in-new-frame t)
+;;  (setq mu4e-view-use-gnus t)
   :custom
   (mail-user-agent 'mu4e-user-agent)
   (mu4e-user-mail-address-list '("lucasri@msu.edu"))
@@ -320,6 +329,7 @@
      ("/Archive" . ?a)
      ("/Trash" . ?t)
      ("/Drafts" . ?d)
+     ("/Reviews" . ?r)
      ("/Sent" . ?s)))
   (message-send-mail-function 'smtpmail-send-it)
   (smtpmail-default-smtp-server "localhost")
@@ -341,4 +351,29 @@
   (setq mu4e-alert-interesting-mail-query
    (concat
     "flag:unread maildir:/INBOX"))
+  )
+
+
+(use-package helm
+  :ensure t
+  :bind (("C-x C-f" . #'helm-find-files)
+	 ("M-x" . #'helm-M-x)
+	 ("C-x b" . #'helm-for-files)
+	 ("M-y" . #'helm-show-kill-ring)
+	 )
+  :init
+  (progn
+    (require 'helm-config)
+    (helm-mode 1)
+    )
+  :config
+  )
+
+
+(use-package helm-google
+  :ensure t
+  )
+
+(use-package helm-chrome
+  :ensure t
   )
