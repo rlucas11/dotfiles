@@ -64,7 +64,8 @@
   (setq recentf-max-saved-items 200
 	recentf-max-menu-items 25)
   (run-at-time nil (* 10 60) 'recentf-save-list)
-  :bind ("C-x C-r" . recentf-open-files))
+;;  :bind ("C-x C-r" . recentf-open-files)
+  )
 
 
 ;; Themes
@@ -264,7 +265,7 @@
     ("628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" default)))
  '(package-selected-packages
    (quote
-    (helm-chrome helm-google helm mu4e-alert shell-pop pdf-tools tablist zenburn-theme nord-theme web-mode use-package ranger poly-noweb poly-markdown poly-R paradox org markdown-preview-mode julia-mode ess color-theme-sanityinc-tomorrow auctex))))
+    (helm-bibtex helm-chrome helm-google helm mu4e-alert shell-pop pdf-tools tablist zenburn-theme nord-theme web-mode use-package ranger poly-noweb poly-markdown poly-R paradox org markdown-preview-mode julia-mode ess color-theme-sanityinc-tomorrow auctex))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -358,7 +359,8 @@
   :ensure t
   :bind (("C-x C-f" . #'helm-find-files)
 	 ("M-x" . #'helm-M-x)
-	 ("C-x b" . #'helm-for-files)
+	 ("C-x C-r" . #'helm-for-files)
+	 ("C-x C-b" . #'helm-bibtex)
 	 ("M-y" . #'helm-show-kill-ring)
 	 )
   :init
@@ -376,4 +378,13 @@
 
 (use-package helm-chrome
   :ensure t
+  )
+
+(use-package helm-bibtex
+  :ensure t
+  :init
+  (setq bibtex-completion-bibliography
+	'("/home/rich/Dropbox/MyLibraryZ2.bib"))
+  (setq bibtex-completion-pdf-field "File")
+   :config 
   )

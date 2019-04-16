@@ -16,3 +16,5 @@ alias vpn='sudo openconnect --juniper https://vpn.msu.edu'
 
 PATH="${PATH}:/home/rich/.cabal/bin"
 source /usr/share/nvm/init-nvm.sh
+
+export LOCATE_PATH="$HOME/var/mlocate.db"
