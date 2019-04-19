@@ -265,7 +265,7 @@
     ("628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" default)))
  '(package-selected-packages
    (quote
-    (helm-bibtex helm-chrome helm-google helm mu4e-alert shell-pop pdf-tools tablist zenburn-theme nord-theme web-mode use-package ranger poly-noweb poly-markdown poly-R paradox org markdown-preview-mode julia-mode ess color-theme-sanityinc-tomorrow auctex))))
+    (polymode markdown-mode helm-bibtex helm-chrome helm-google helm mu4e-alert shell-pop pdf-tools tablist zenburn-theme nord-theme web-mode use-package ranger poly-noweb poly-markdown poly-R paradox org markdown-preview-mode julia-mode ess color-theme-sanityinc-tomorrow auctex))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -280,8 +280,14 @@
 ;; pdf-tools
 (use-package pdf-tools
   :ensure t
+  :config
+  (pdf-tools-install)
+  (setq-default pdf-view-display-size 'fit-height)
+  (setq pdf-view-resize-factor 1.1)
+  (define-key pdf-view-mode-map (kbd "h") 'pdf-annot-add-highlight-markup-annotation)
+  (define-key pdf-view-mode-map (kbd "t") 'pdf-annot-add-text-annotation)
   )
-(pdf-tools-install)
+
 
 
 ;; company-mode
