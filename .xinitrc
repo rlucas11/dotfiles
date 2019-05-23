@@ -18,6 +18,7 @@ fi
 # fi
 
 export QT_AUTO_SCREEN_SCALE_FACTOR=1
+systemctl --user import-environment DISPLAY
 
 #emacs --daemon &
 #xcompmgr &
@@ -25,6 +26,7 @@ export QT_AUTO_SCREEN_SCALE_FACTOR=1
 #/home/rich/scripts/calendar_check.sh &
 #volumeicon &
 
+updatedb -l 0 -o $HOME/var/mlocate.db -U $HOME &
 dropbox & 
 #compton --backend glx --glx-no-stencil --vsync opengl-swc --unredir-if-possible --blur-background &
 compton & 

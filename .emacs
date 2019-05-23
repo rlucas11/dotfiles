@@ -26,6 +26,10 @@
 
 (add-hook 'text-mode-hook 'turn-on-flyspell) ; Turn on spell checking in text mode
 
+(setq browse-url-browser-function 'browse-url-chrome
+      browse-url-chrome-program "google-chrome-beta")
+
+
 
 ;; Global keys
 ;;(global-set-key "\C-cl" 'org-store-link)
@@ -263,9 +267,38 @@
  '(custom-safe-themes
    (quote
     ("628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" default)))
+ '(mail-user-agent (quote mu4e-user-agent))
+ '(message-send-mail-function (quote smtpmail-send-it))
+ '(mu4e-attachment-dir "~/Downloads")
+ '(mu4e-drafts-folder "/Drafts")
+ '(mu4e-get-mail-command "true")
+ '(mu4e-maildir "~/Maildir")
+ '(mu4e-maildir-shortcuts
+   (quote
+    (("/INBOX" . 105)
+     ("/Archive" . 97)
+     ("/Trash" . 116)
+     ("/Drafts" . 100)
+     ("/Reviews" . 114)
+     ("/Sent" . 115))))
+ '(mu4e-refile-folder "/Archive")
+ '(mu4e-reply-to-address "lucasri@msu.edu" t)
+ '(mu4e-sent-folder "/Sent")
+ '(mu4e-trash-folder "/Trash")
+ '(mu4e-update-interval 300)
+ '(mu4e-use-fancy-chars t)
+ '(mu4e-user-mail-address-list (quote ("lucasri@msu.edu")))
+ '(mu4e-view-show-addresses t)
+ '(mu4e-view-show-images t)
  '(package-selected-packages
    (quote
-    (polymode markdown-mode helm-bibtex helm-chrome helm-google helm mu4e-alert shell-pop pdf-tools tablist zenburn-theme nord-theme web-mode use-package ranger poly-noweb poly-markdown poly-R paradox org markdown-preview-mode julia-mode ess color-theme-sanityinc-tomorrow auctex))))
+    (fzf wttrin polymode markdown-mode helm-bibtex helm-chrome helm-google helm mu4e-alert shell-pop pdf-tools tablist zenburn-theme nord-theme web-mode use-package ranger poly-noweb poly-markdown poly-R paradox org markdown-preview-mode julia-mode ess color-theme-sanityinc-tomorrow auctex)))
+ '(smtpmail-default-smtp-server "localhost")
+ '(smtpmail-local-domain "localhost")
+ '(smtpmail-smtp-server "localhost")
+ '(smtpmail-smtp-service 1025)
+ '(user-full-name "Richard E. Lucas")
+ '(user-mail-address "lucasri@msu.edu"))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -278,16 +311,28 @@
 (use-package tablist)
 
 ;; pdf-tools
+
+(defun rel/save-buffer-no-args ()
+  "Save buffer ignoring arguments"
+  (save-buffer))
+
 (use-package pdf-tools
-  :ensure t
+  :pin manual
   :config
   (pdf-tools-install)
   (setq-default pdf-view-display-size 'fit-height)
   (setq pdf-view-resize-factor 1.1)
   (define-key pdf-view-mode-map (kbd "h") 'pdf-annot-add-highlight-markup-annotation)
   (define-key pdf-view-mode-map (kbd "t") 'pdf-annot-add-text-annotation)
+  ;; automatically annotate highlights
+  (setq pdf-annot-activate-created-annotations t)
+  ;; wait until map is available
+  (with-eval-after-load "pdf-annot"
+    (define-key pdf-annot-edit-contents-minor-mode-map (kbd "<return>") 'pdf-annot-edit-contents-commit)
+    (define-key pdf-annot-edit-contents-minor-mode-map (kbd "<S-return>") 'newline)
+    ;; save after adding comment
+    (advice-add 'pdf-annot-edit-contents-commit :after 'rel/save-buffer-no-args))
   )
-
 
 
 ;; company-mode
@@ -384,6 +429,7 @@
 
 (use-package helm-chrome
   :ensure t
+  :bind ("C-x c" . #'helm-chrome-bookmarks)
   )
 
 (use-package helm-bibtex
@@ -393,4 +439,19 @@
 	'("/home/rich/Dropbox/MyLibraryZ2.bib"))
   (setq bibtex-completion-pdf-field "File")
    :config 
+  )
+
+
+;; weather from wttr.in
+(use-package wttrin
+  :ensure t
+  :commands (wttrin)
+  :init
+  (setq wttrin-default-cities '("East Lansing"))
+  (setq wttrin-default-accept-language '("Accept-Language" . "en-US"))
+  )
+
+
+(use-package fzf
+  :ensure t
   )
