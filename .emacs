@@ -103,6 +103,7 @@
   :mode ("\\.org\\'" . org-mode)
   :bind (("C-c c" . org-capture)
 	 ("C-c a" . org-agenda)
+	 ("C-c r" . org-revert-all-org-buffers)
 	 ("C-c l" . org-store-link))
   :config
   (progn
@@ -425,6 +426,7 @@
 
 (use-package helm-google
   :ensure t
+  :bind ("C-c g" . #'helm-google)
   )
 
 (use-package helm-chrome
@@ -446,6 +448,7 @@
 (use-package wttrin
   :ensure t
   :commands (wttrin)
+  :bind ("C-c w" . #'wttrin)
   :init
   (setq wttrin-default-cities '("East Lansing"))
   (setq wttrin-default-accept-language '("Accept-Language" . "en-US"))
@@ -454,4 +457,5 @@
 
 (use-package fzf
   :ensure t
+  :bind ("C-c z" . #'fzf-directory)
   )

@@ -26,6 +26,7 @@ source /usr/share/fzf/fzf-extras.bash
 export EDITOR="emacsclient"
 export VISUAL="emacsclient -c -a ''"
 export ALTERNATE_EDITOR="emacs"
+export BROWSER="google-chrome-beta"
 
 fb() {
     # save newline separated string into an array
