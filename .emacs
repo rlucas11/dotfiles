@@ -154,7 +154,7 @@
     (setq org-file-apps
     '(("\\.docx\\'" . "lowriter %s")
       ("\\.x?html?\\'" . default)
-      ("\\.pdf\\'" . "zathura %s")
+      ("\\.pdf\\'" . default)
       (auto-mode . emacs)))
     ;; Resume clocking task when emacs is restarted
     (org-clock-persistence-insinuate)
@@ -293,7 +293,7 @@
  '(mu4e-view-show-images t)
  '(package-selected-packages
    (quote
-    (fzf wttrin polymode markdown-mode helm-bibtex helm-chrome helm-google helm mu4e-alert shell-pop pdf-tools tablist zenburn-theme nord-theme web-mode use-package ranger poly-noweb poly-markdown poly-R paradox org markdown-preview-mode julia-mode ess color-theme-sanityinc-tomorrow auctex)))
+    (org-pdfview mingus fzf wttrin polymode markdown-mode helm-bibtex helm-chrome helm-google helm mu4e-alert shell-pop pdf-tools tablist zenburn-theme nord-theme web-mode use-package ranger poly-noweb poly-markdown poly-R paradox org markdown-preview-mode julia-mode ess color-theme-sanityinc-tomorrow auctex)))
  '(smtpmail-default-smtp-server "localhost")
  '(smtpmail-local-domain "localhost")
  '(smtpmail-smtp-server "localhost")
@@ -335,6 +335,8 @@
     (advice-add 'pdf-annot-edit-contents-commit :after 'rel/save-buffer-no-args))
   )
 
+;; org-pdfview
+(use-package org-pdfview)
 
 ;; company-mode
 (use-package company
@@ -401,9 +403,6 @@
   :config
   (mu4e-alert-set-default-style 'libnotify)
   :init
-  (setq mu4e-alert-interesting-mail-query
-   (concat
-    "flag:unread maildir:/INBOX"))
   )
 
 
