@@ -293,7 +293,7 @@
  '(mu4e-view-show-images t)
  '(package-selected-packages
    (quote
-    (org-pdfview mingus fzf wttrin polymode markdown-mode helm-bibtex helm-chrome helm-google helm mu4e-alert shell-pop pdf-tools tablist zenburn-theme nord-theme web-mode use-package ranger poly-noweb poly-markdown poly-R paradox org markdown-preview-mode julia-mode ess color-theme-sanityinc-tomorrow auctex)))
+    (helm-mu org-pdfview mingus fzf wttrin polymode markdown-mode helm-bibtex helm-chrome helm-google helm mu4e-alert shell-pop pdf-tools tablist zenburn-theme nord-theme web-mode use-package ranger poly-noweb poly-markdown poly-R paradox org markdown-preview-mode julia-mode ess color-theme-sanityinc-tomorrow auctex)))
  '(smtpmail-default-smtp-server "localhost")
  '(smtpmail-local-domain "localhost")
  '(smtpmail-smtp-server "localhost")
@@ -400,6 +400,11 @@
   :after mu4e
   :hook ((after-init . mu4e-alert-enable-mode-line-display)
 	 (after-init . mu4e-alert-enable-notifications))
+  :init
+  (setq mu4e-alert-interesting-mail-query
+	(concat
+	 "flag:unread maildir:/INBOX"
+	 ))
   :config
   (mu4e-alert-set-default-style 'libnotify)
   :init
@@ -409,9 +414,11 @@
 (use-package helm
   :ensure t
   :bind (("C-x C-f" . #'helm-find-files)
+	 ("C-c h" . helm-command-prefix)
 	 ("M-x" . #'helm-M-x)
 	 ("C-x C-r" . #'helm-for-files)
 	 ("C-x C-b" . #'helm-bibtex)
+	 ("C-x b" . #'helm-buffers-list)
 	 ("M-y" . #'helm-show-kill-ring)
 	 )
   :init
@@ -422,16 +429,25 @@
   :config
   )
 
-
-(use-package helm-google
+(use-package helm-mu
   :ensure t
-  :bind ("C-c g" . #'helm-google)
   )
 
-(use-package helm-chrome
-  :ensure t
-  :bind ("C-x c" . #'helm-chrome-bookmarks)
-  )
+(define-key mu4e-main-mode-map "s" 'helm-mu)
+(define-key mu4e-headers-mode-map "s" 'helm-mu)
+(define-key mu4e-view-mode-map "s" 'helm-mu)
+;;(setq helm-mu-default-search-string "(maildir:/INBOX OR maildir:/Sent OR maildir:/Archive OR maildir:/Reviews)")
+
+
+;; (use-package helm-google
+;;   :ensure t
+;;   :bind ("C-c g" . #'helm-google)
+;;   )
+
+;; (use-package helm-chrome
+;;   :ensure t
+;;   :bind ("C-x c" . #'helm-chrome-bookmarks)
+;;   )
 
 (use-package helm-bibtex
   :ensure t
