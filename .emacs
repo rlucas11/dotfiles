@@ -187,6 +187,67 @@
 
 (require `org-protocol)
 
+
+(use-package org-super-agenda
+  :ensure t
+  :config
+  (org-super-agenda-mode)
+  (setq org-agenda-custom-commands
+	'(("c" "Agenda and TODO tasks"
+	   ((todo "TODAY")
+	    (todo "NEXT")
+	    (todo "TODO")
+	    (todo "WAITING")
+	    (agenda "")))
+	  ("o" "Grouped TODO tasks"
+	   ((todo "TODAY")
+	    (todo "NEXT")
+	    (todo "TODO")
+	    (todo "WAITING")))
+	  ("y" "Agenda and Today's tasks"
+	   ((todo "TODAY")
+	    (agenda "")))
+	  ("s" "Super Agenda" agenda
+	   (org-super-agenda-mode)
+	   ((org-agenda-span 'day)
+	    (org-super-agenda-groups
+	     '(
+	       (:name "Today's Items"
+		      :time-grid f
+		      :todo "TODAY")
+	       (:name "Important"
+		      :priority "A")
+	       (:name "Reviews"
+		      :tag "REVIEWS"
+		      :time-grid f)
+	       (:name "Next Things"
+		      :todo "NEXT")
+	       (:name "Habits"
+		      :habit t)
+	       (:name "Waiting"
+		      :todo "WAITING")
+	       (:discard (:anything))
+	       )))
+	   (org-agenda nil "a"))))
+  ;; (setq org-super-agenda-groups
+  ;;        '(;; Each group has an implicit Boolean OR operator between its selectors.
+  ;;           (:name "TIMELINE & HABITS"  ; Optionally specify section name
+  ;;                  :time-grid t
+  ;; 	           :habit t)
+  ;; 	    (:name "Important"
+  ;;                  ;; Single arguments given alone
+  ;;                  :tag "URGENT"
+  ;;                  :priority "1")
+  ;;           (:name "Done today"
+  ;;                  :and (:regexp "State \"DONE\""
+  ;;                        :log t))
+  ;;           (:name "Clocked today"
+  ;;                  :log t)
+  ;;        ;; After the last group, the agenda will display items that didn't
+  ;;        ;; match any of these groups, with the default order position of 99
+  ;;     ))
+  )
+
 ;; yasnippet
 (use-package yasnippet
   :ensure t
