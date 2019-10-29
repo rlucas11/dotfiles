@@ -29,15 +29,9 @@
 (setq browse-url-browser-function 'browse-url-chrome
       browse-url-chrome-program "google-chrome-beta")
 
-
-
-;; Global keys
-;;(global-set-key "\C-cl" 'org-store-link)
-;;(global-set-key "\C-ca" 'org-agenda)
-;;(global-set-key "\C-cb" 'org-iswitchb)
-
-
-
+;; Automatically revert buffers
+(global-auto-revert-mode 1)
+(add-hook 'dired-mode-hook 'auto-revert-mode)
 
 ;; MELBA
 
@@ -58,6 +52,14 @@
 ;; use-package
 (eval-when-compile
   (require 'use-package))
+
+
+;; benchmark
+(use-package benchmark-init
+  :ensure t
+  :config
+  ;; To disable collection of benchmark data after init is done.
+  (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
 
 
@@ -159,6 +161,24 @@
     ;; Resume clocking task when emacs is restarted
     (org-clock-persistence-insinuate)
     ;;
+    ;; Agenda customization from http://pragmaticemacs.com/emacs/org-mode-basics-vii-a-todo-list-with-schedules-and-deadlines/
+    ;;warn me of any deadlines in next 7 days
+    (setq org-deadline-warning-days 7)
+    ;;show me tasks scheduled or due in next fortnight
+    (setq org-agenda-span (quote fortnight))
+    ;;don't show tasks as scheduled if they are already shown as a deadline
+    (setq org-agenda-skip-scheduled-if-deadline-is-shown t)
+    ;;don't give awarning colour to tasks with impending deadlines
+    ;;if they are scheduled to be done
+    (setq org-agenda-skip-deadline-prewarning-if-scheduled (quote pre-scheduled))
+    ;;sort tasks in order of when they are due and then by priority
+    (setq org-agenda-sorting-strategy
+	  (quote
+	   ((agenda deadline-up priority-down)
+	    (todo priority-down category-keep)
+	    (tags priority-down category-keep)
+	    (search category-keep))))
+
     ;; Show lot of clocking history so it's easy to pick items off the C-F11 list
     (setq org-clock-history-length 23)
     ;; Resume clocking task on clock-in if the clock is open
@@ -354,7 +374,7 @@
  '(mu4e-view-show-images t)
  '(package-selected-packages
    (quote
-    (helm-mu org-pdfview mingus fzf wttrin polymode markdown-mode helm-bibtex helm-chrome helm-google helm mu4e-alert shell-pop pdf-tools tablist zenburn-theme nord-theme web-mode use-package ranger poly-noweb poly-markdown poly-R paradox org markdown-preview-mode julia-mode ess color-theme-sanityinc-tomorrow auctex)))
+    (dired-quick-sort htmlize helm-mu org-pdfview mingus fzf wttrin polymode markdown-mode helm-bibtex helm-chrome helm-google helm mu4e-alert shell-pop pdf-tools tablist zenburn-theme nord-theme web-mode use-package ranger poly-noweb poly-markdown poly-R paradox org markdown-preview-mode julia-mode ess color-theme-sanityinc-tomorrow auctex)))
  '(smtpmail-default-smtp-server "localhost")
  '(smtpmail-local-domain "localhost")
  '(smtpmail-smtp-server "localhost")
@@ -383,7 +403,7 @@
   :config
   (pdf-tools-install)
   (setq-default pdf-view-display-size 'fit-height)
-  (setq pdf-view-resize-factor 1.1)
+  (setq pdf-view-resize-factor 1.05)
   (define-key pdf-view-mode-map (kbd "h") 'pdf-annot-add-highlight-markup-annotation)
   (define-key pdf-view-mode-map (kbd "t") 'pdf-annot-add-text-annotation)
   ;; automatically annotate highlights
@@ -535,3 +555,9 @@
   :ensure t
   :bind ("C-c z" . #'fzf-directory)
   )
+
+
+(use-package dired-quick-sort
+  :ensure t
+  :config
+  (dired-quick-sort-setup))
