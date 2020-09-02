@@ -29,9 +29,11 @@ systemctl --user import-environment DISPLAY
 updatedb -l 0 -o $HOME/var/mlocate.db -U $HOME &
 dropbox & 
 #compton --backend glx --glx-no-stencil --vsync opengl-swc --unredir-if-possible --blur-background &
-compton & 
+#compton &
+picom -b &
 # synapse &
 mpd &
+dunst &
 eval $(/usr/bin/gnome-keyring-daemon --start --components=gpg,pkcs11,secrets,ssh)
 export SSH_AUTH_SOCK
 
