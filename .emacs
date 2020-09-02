@@ -26,8 +26,10 @@
 
 (add-hook 'text-mode-hook 'turn-on-flyspell) ; Turn on spell checking in text mode
 
-(setq browse-url-browser-function 'browse-url-chrome
-      browse-url-chrome-program "google-chrome-beta")
+;; (setq browse-url-browser-function 'browse-url-chrome
+;;       browse-url-chrome-program "google-chrome-beta")
+
+(setq browse-url-browser-function 'browse-url-firefox)
 
 ;; Automatically revert buffers
 (global-auto-revert-mode 1)
@@ -79,7 +81,8 @@
   :ensure t
   :config
   (setf custom-safe-themes t)
-  (color-theme-sanityinc-tomorrow-eighties))
+  ;;  (color-theme-sanityinc-tomorrow-eighties)
+  )
 
 ;; (use-package nord-theme
 ;;   :ensure t)
@@ -116,6 +119,7 @@
 	   ("~/Dropbox/org/notes.org"
 	    "~/Dropbox/org/work.org"
 	    "~/Dropbox/org/gcal.org"
+	    "~/Dropbox/org/calendar.org"
 	    "~/Dropbox/org/home.org"
 	    "~/Dropbox/org/research.org"
 	    "~/Dropbox/org/peerReview.org"
@@ -139,7 +143,7 @@
          "Web Template"
          entry
          (file+headline "~/Dropbox/org/capture.org" "Notes")
-         "* %^{Title}\n\n  Source: %u, %c\n\n  %i"
+         "* %^{Title}\n\n  Source: %:link, %:description\n\n  %i"
          :empty-lines 1)
 	("t"
 	 "TODO Template"
@@ -158,27 +162,29 @@
       ("\\.x?html?\\'" . default)
       ("\\.pdf\\'" . default)
       (auto-mode . emacs)))
-    ;; Resume clocking task when emacs is restarted
-    (org-clock-persistence-insinuate)
     ;;
     ;; Agenda customization from http://pragmaticemacs.com/emacs/org-mode-basics-vii-a-todo-list-with-schedules-and-deadlines/
     ;;warn me of any deadlines in next 7 days
-    (setq org-deadline-warning-days 7)
+    (setq org-deadline-warning-days 21)
     ;;show me tasks scheduled or due in next fortnight
-    (setq org-agenda-span (quote fortnight))
+    (setq org-agenda-span (quote month))
     ;;don't show tasks as scheduled if they are already shown as a deadline
     (setq org-agenda-skip-scheduled-if-deadline-is-shown t)
     ;;don't give awarning colour to tasks with impending deadlines
     ;;if they are scheduled to be done
     (setq org-agenda-skip-deadline-prewarning-if-scheduled (quote pre-scheduled))
     ;;sort tasks in order of when they are due and then by priority
+    (setq org-agenda-skip-scheduled-if-done t)
+    (setq org-agenda-skip-deadline-if-done t)
     (setq org-agenda-sorting-strategy
 	  (quote
 	   ((agenda deadline-up priority-down)
 	    (todo priority-down category-keep)
 	    (tags priority-down category-keep)
 	    (search category-keep))))
-
+    ;; Clocking
+    ;; Resume clocking task when emacs is restarted
+    (org-clock-persistence-insinuate)
     ;; Show lot of clocking history so it's easy to pick items off the C-F11 list
     (setq org-clock-history-length 23)
     ;; Resume clocking task on clock-in if the clock is open
@@ -202,6 +208,75 @@
     )
   )
 
+
+(defun bh/punch-in (arg)
+  "Start continuous clocking and set the default task to the
+selected task.  If no task is selected set the Organization task
+as the default task."
+  (interactive "p")
+  (setq bh/keep-clock-running t)
+  (if (equal major-mode 'org-agenda-mode)
+      ;;
+      ;; We're in the agenda
+      ;;
+      (let* ((marker (org-get-at-bol 'org-hd-marker))
+             (tags (org-with-point-at marker (org-get-tags-at))))
+        (if (and (eq arg 4) tags)
+            (org-agenda-clock-in '(16))
+          (bh/clock-in-organization-task-as-default)))
+    ;;
+    ;; We are not in the agenda
+    ;;
+    (save-restriction
+      (widen)
+      ; Find the tags on the current task
+      (if (and (equal major-mode 'org-mode) (not (org-before-first-heading-p)) (eq arg 4))
+          (org-clock-in '(16))
+        (bh/clock-in-organization-task-as-default)))))
+
+(defun bh/punch-out ()
+  (interactive)
+  (setq bh/keep-clock-running nil)
+  (when (org-clock-is-active)
+    (org-clock-out))
+  (org-agenda-remove-restriction-lock))
+
+(defun bh/clock-in-default-task ()
+  (save-excursion
+    (org-with-point-at org-clock-default-task
+      (org-clock-in))))
+
+(defvar bh/organization-task-id "ab6d0d4d-97d8-4239-8d92-9a4fc4cd4431")
+
+(defun bh/clock-in-last-task (arg)
+  "Clock in the interrupted task if there is one
+Skip the default task and get the next one.
+A prefix arg forces clock in of the default task."
+  (interactive "p")
+  (let ((clock-in-to-task
+         (cond
+          ((eq arg 4) org-clock-default-task)
+          ((and (org-clock-is-active)
+                (equal org-clock-default-task (cadr org-clock-history)))
+           (caddr org-clock-history))
+          ((org-clock-is-active) (cadr org-clock-history))
+          ((equal org-clock-default-task (car org-clock-history)) (cadr org-clock-history))
+          (t (car org-clock-history)))))
+    (widen)
+    (org-with-point-at clock-in-to-task
+      (org-clock-in nil))))
+
+(defun bh/clock-in-organization-task-as-default ()
+  (interactive)
+  (org-with-point-at (org-id-find bh/organization-task-id 'marker)
+    (org-clock-in '(16))))
+
+(global-set-key (kbd "<f9> I") 'bh/punch-in)
+(global-set-key (kbd "<f9> O") 'bh/punch-out)
+(global-set-key (kbd "<f11>") 'org-clock-goto)
+(global-set-key (kbd "C-<f11>") 'org-clock-in)
+
+
 (use-package org-habit
   :ensure nil)
 
@@ -221,7 +296,9 @@
 	    (agenda "")))
 	  ("o" "Grouped TODO tasks"
 	   ((todo "TODAY")
+	    (tags-todo "+TASKS-DONE")
 	    (todo "NEXT")
+	    (tags-todo "+REVIEWS-DONE")
 	    (todo "TODO")
 	    (todo "WAITING")))
 	  ("y" "Agenda and Today's tasks"
@@ -238,8 +315,7 @@
 	       (:name "Important"
 		      :priority "A")
 	       (:name "Reviews"
-		      :tag "REVIEWS"
-		      :time-grid f)
+		      :tag "REVIEWS")
 	       (:name "Next Things"
 		      :todo "NEXT")
 	       (:name "Habits"
@@ -348,13 +424,13 @@
  '(custom-enabled-themes (quote (sanityinc-tomorrow-eighties)))
  '(custom-safe-themes
    (quote
-    ("628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" default)))
+    ("229c5cf9c9bd4012be621d271320036c69a14758f70e60385e87880b46d60780" "285efd6352377e0e3b68c71ab12c43d2b72072f64d436584f9159a58c4ff545a" "e1ecb0536abec692b5a5e845067d75273fe36f24d01210bf0aa5842f2a7e029f" "be9645aaa8c11f76a10bcf36aaf83f54f4587ced1b9b679b55639c87404e2499" "99ea831ca79a916f1bd789de366b639d09811501e8c092c85b2cb7d697777f93" "ca849ae0c889eb918785cdc75452b1e11a00848a5128a95a23872e0119ccc8f4" "c83c095dd01cde64b631fb0fe5980587deec3834dc55144a6e78ff91ebc80b19" "774aa2e67af37a26625f8b8c86f4557edb0bac5426ae061991a7a1a4b1c7e375" "1ed5c8b7478d505a358f578c00b58b430dde379b856fbcb60ed8d345fc95594e" "2cdc13ef8c76a22daa0f46370011f54e79bae00d5736340a5ddfe656a767fddf" "d5f8099d98174116cba9912fe2a0c3196a7cd405d12fa6b9375c55fc510988b5" "a038af4fff7330f27f4baec145ef142f8ea208648e65a4b0eac3601763598665" "1d50bd38eed63d8de5fcfce37c4bb2f660a02d3dff9cbfd807a309db671ff1af" "e074be1c799b509f52870ee596a5977b519f6d269455b84ed998666cf6fc802a" "0809c08440b51a39c77ec5529f89af83ab256a9d48107b088d40098ce322c7d8" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" default)))
  '(mail-user-agent (quote mu4e-user-agent))
  '(message-send-mail-function (quote smtpmail-send-it))
  '(mu4e-attachment-dir "~/Downloads")
  '(mu4e-drafts-folder "/Drafts")
  '(mu4e-get-mail-command "true")
- '(mu4e-maildir "~/Maildir")
+ '(mu4e-maildir "/home/rich/Maildir")
  '(mu4e-maildir-shortcuts
    (quote
     (("/INBOX" . 105)
@@ -374,7 +450,7 @@
  '(mu4e-view-show-images t)
  '(package-selected-packages
    (quote
-    (dired-quick-sort htmlize helm-mu org-pdfview mingus fzf wttrin polymode markdown-mode helm-bibtex helm-chrome helm-google helm mu4e-alert shell-pop pdf-tools tablist zenburn-theme nord-theme web-mode use-package ranger poly-noweb poly-markdown poly-R paradox org markdown-preview-mode julia-mode ess color-theme-sanityinc-tomorrow auctex)))
+    (org-noter doom-themes helm-projectile projectile dired-quick-sort htmlize helm-mu org-pdfview mingus fzf wttrin polymode markdown-mode helm-bibtex helm-chrome helm-google helm mu4e-alert shell-pop pdf-tools tablist zenburn-theme nord-theme web-mode use-package ranger poly-noweb poly-markdown poly-R paradox org markdown-preview-mode julia-mode ess color-theme-sanityinc-tomorrow auctex)))
  '(smtpmail-default-smtp-server "localhost")
  '(smtpmail-local-domain "localhost")
  '(smtpmail-smtp-server "localhost")
@@ -439,18 +515,23 @@
   :bind ("C-c e" . mu4e)
   :init
   (add-hook 'mu4e-view-mode-hook #'visual-line-mode)
+  (add-hook 'mu4e-compose-mode-hook 'flyspell-mode)
   (setq mu4e-compose-format-flowed t)
   (add-hook 'mu4e-compose-mode-hook (lambda () (use-hard-newlines -1)))
   (setq mu4e-compose-in-new-frame t)
-;;  (setq mu4e-view-use-gnus t)
+;;  (setq mu4e-change-filenames-when-moving t)
+  (setq mu4e-view-use-gnus t)
+  :config
+  (add-to-list 'mu4e-view-actions
+	       '("ViewInBrowser" . mu4e-action-view-in-browser) t)
   :custom
   (mail-user-agent 'mu4e-user-agent)
-  (mu4e-user-mail-address-list '("lucasri@msu.edu"))
+;;  (mu4e-user-mail-address-list '("lucasri@msu.edu"))
   (mu4e-reply-to-address "lucasri@msu.edu")
   (user-mail-address "lucasri@msu.edu")
   (user-full-name "Richard E. Lucas")
   (mu4e-attachment-dir "~/Downloads")
-  (mu4e-maildir "~/Maildir")
+;;  (mu4e-maildir "/home/rich/Maildir")
   (mu4e-drafts-folder "/Drafts")
   (mu4e-get-mail-command "true")
   (mu4e-refile-folder "/Archive")
@@ -474,13 +555,21 @@
   (smtpmail-smtp-service 1025)
   )
 
+(require 'gnus-icalendar)
+(setq gnus-icalendar-org-capture-file "~/Dropbox/org/calendar.org")
+(setq gnus-icalendar-org-capture-headline '("Calendar"))
+(gnus-icalendar-org-setup)
+
+(require 'mu4e-icalendar)
+(mu4e-icalendar-setup)
+
 (require 'org-mu4e)
 
 (use-package mu4e-alert
   :ensure t
   :after mu4e
-  :hook ((after-init . mu4e-alert-enable-mode-line-display)
-	 (after-init . mu4e-alert-enable-notifications))
+  ;; :hook ((after-init . mu4e-alert-enable-mode-line-display)
+  ;; 	 (after-init . mu4e-alert-enable-notifications))
   :init
   (setq mu4e-alert-interesting-mail-query
 	(concat
@@ -488,8 +577,10 @@
 	 ))
   :config
   (mu4e-alert-set-default-style 'libnotify)
-  :init
+  (add-hook 'after-init-hook #'mu4e-alert-enable-notifications)
+  (add-hook 'after-init-hook #'mu4e-alert-enable-mode-line-display)
   )
+
 
 
 (use-package helm
@@ -510,13 +601,13 @@
   :config
   )
 
-(use-package helm-mu
-  :ensure t
-  )
+;; (use-package helm-mu
+;;   :ensure t
+;;   )
 
-(define-key mu4e-main-mode-map "s" 'helm-mu)
-(define-key mu4e-headers-mode-map "s" 'helm-mu)
-(define-key mu4e-view-mode-map "s" 'helm-mu)
+;; (define-key mu4e-main-mode-map "s" 'helm-mu)
+;; (define-key mu4e-headers-mode-map "s" 'helm-mu)
+;; (define-key mu4e-view-mode-map "s" 'helm-mu)
 ;;(setq helm-mu-default-search-string "(maildir:/INBOX OR maildir:/Sent OR maildir:/Archive OR maildir:/Reviews)")
 
 
@@ -561,3 +652,46 @@
   :ensure t
   :config
   (dired-quick-sort-setup))
+
+
+(use-package projectile
+  :ensure t
+  :config
+  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+  (projectile-mode +1))
+
+(use-package helm-projectile
+  :ensure t
+  :config
+  (helm-projectile-on))
+
+(use-package doom-themes
+  :ensure t
+  :config
+  ;; Global settings (defaults)
+  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+        doom-themes-enable-italic t) ; if nil, italics is universally disabled
+  (load-theme 'doom-one t)
+
+  ;; Enable flashing mode-line on errors
+  (doom-themes-visual-bell-config)
+  
+  ;; Corrects (and improves) org-mode's native fontification.
+  (doom-themes-org-config))
+
+(use-package mingus
+  :ensure t)
+
+
+(use-package org-noter
+  :ensure t)
+
+;; Open documents with correct program
+(require 'dired-x)
+(setq dired-guess-shell-alist-user '(("\\.doc//'" "libreoffice")
+				     ("\\.docx//'" "libreoffice")
+				     ("\\.ppt//'" "libreoffice")
+				     ("\\.pptx//'" "libreoffice")
+				     ("\\.xls//'" "libreoffice")
+				     ("\\.xlsx//'" "libreoffice")))
+				     
