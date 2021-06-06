@@ -1,15 +1,15 @@
 ;; Appearance and Startup Behavior
 
-(set-frame-parameter (selected-frame) 'alpha '(92 . 90))
-(add-to-list 'default-frame-alist '(alpha . (92 .90)))
+;(set-frame-parameter (selected-frame) 'alpha '(95 . 90))
+;(add-to-list 'default-frame-alist '(alpha . (95 .90)))
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 (menu-bar-mode -1)
 (global-visual-line-mode 1) ; 1 for on, 0 for off.
 (setq x-select-enable-clipboard t)
 (server-start)
+(add-to-list 'load-path "~/.emacs.d/lisp/")
 
-(set-frame-font "Inconsolata-12")
 (when (fboundp 'windmove-default-keybindings)
   (windmove-default-keybindings))
 
@@ -35,6 +35,7 @@
 (global-auto-revert-mode 1)
 (add-hook 'dired-mode-hook 'auto-revert-mode)
 
+
 ;; MELBA
 
 (require 'package)
@@ -56,17 +57,11 @@
   (require 'use-package))
 
 
-;; benchmark
-(use-package benchmark-init
-  :ensure t
-  :config
-  ;; To disable collection of benchmark data after init is done.
-  (add-hook 'after-init-hook 'benchmark-init/deactivate))
-
 
 
 ;; recentf
 (use-package recentf
+  :ensure t
   :init (recentf-mode)
   :config
   (setq recentf-max-saved-items 200
@@ -81,7 +76,7 @@
   :ensure t
   :config
   (setf custom-safe-themes t)
-  ;;  (color-theme-sanityinc-tomorrow-eighties)
+    (color-theme-sanityinc-tomorrow-eighties)
   )
 
 ;; (use-package nord-theme
@@ -112,19 +107,20 @@
 	 ("C-c l" . org-store-link))
   :config
   (progn
-    (setq org-directory "~/Dropbox/org")
+    (setq org-directory "~/OneDrive/org")
     (setq org-refile-targets (quote ((org-agenda-files :regexp . "*"))))
     (setq org-agenda-files
 	  (quote
-	   ("~/Dropbox/org/notes.org"
-	    "~/Dropbox/org/work.org"
-	    "~/Dropbox/org/gcal.org"
-	    "~/Dropbox/org/calendar.org"
-	    "~/Dropbox/org/home.org"
-	    "~/Dropbox/org/research.org"
-	    "~/Dropbox/org/peerReview.org"
-	    "~/Dropbox/org/recipes.org")))
-    (setq org-default-notes-file "~/Dropbox/org/notes.org")
+	   ("~/OneDrive/org/notes.org"
+	    "~/OneDrive/org/work.org"
+;;	    "~/OneDrive/org/gcal.org"
+	    "~/OneDrive/org/calendar.org"
+	    "~/OneDrive/org/home.org"
+;;	    "~/OneDrive/org/research.org"
+;;	    "~/OneDrive/org/peerReview.org"
+	    "~/OneDrive/org/recipes.org"
+	    )))
+    (setq org-default-notes-file "~/OneDrive/org/notes.org")
     (setq org-agenda-custom-commands
           '(("c" "Agenda and TODO tasks"
              ((todo "TODAY")
@@ -142,19 +138,24 @@
        (("w"
          "Web Template"
          entry
-         (file+headline "~/Dropbox/org/capture.org" "Notes")
+         (file+headline "~/OneDrive/org/capture.org" "Notes")
          "* %^{Title}\n\n  Source: %:link, %:description\n\n  %i"
          :empty-lines 1)
 	("t"
 	 "TODO Template"
 	 entry
-	 (file+headline "~/Dropbox/org/capture.org" "Tasks")
+	 (file+headline "~/OneDrive/org/capture.org" "Tasks")
 	 "* TODO %?\n %i\n")
 	("e"
 	 "Email TODO Template"
 	 entry
-	 (file+headline "~/Dropbox/org/capture.org" "Tasks")
+	 (file+headline "~/OneDrive/org/capture.org" "Tasks")
 	 "* TODO %?\n %i\n %a")
+	("c" "Cookbook" entry (file "~/OneDrive/org/cookbook.org")
+         "%(org-chef-get-recipe-from-url)"
+         :empty-lines 1)
+        ("m" "Manual Cookbook" entry (file "~/OneDrive/org/cookbook.org")
+         "* %^{Recipe title: }\n  :PROPERTIES:\n  :source-url:\n  :servings:\n  :prep-time:\n  :cook-time:\n  :ready-in:\n  :END:\n** Ingredients\n   %?\n** Directions\n\n")
         ;; ... more templates here ...
         )))
     (setq org-file-apps
@@ -167,7 +168,7 @@
     ;;warn me of any deadlines in next 7 days
     (setq org-deadline-warning-days 21)
     ;;show me tasks scheduled or due in next fortnight
-    (setq org-agenda-span (quote month))
+    (setq org-agenda-span (quote week))
     ;;don't show tasks as scheduled if they are already shown as a deadline
     (setq org-agenda-skip-scheduled-if-deadline-is-shown t)
     ;;don't give awarning colour to tasks with impending deadlines
@@ -178,7 +179,7 @@
     (setq org-agenda-skip-deadline-if-done t)
     (setq org-agenda-sorting-strategy
 	  (quote
-	   ((agenda deadline-up priority-down)
+	   ((agenda time-up deadline-up priority-down)
 	    (todo priority-down category-keep)
 	    (tags priority-down category-keep)
 	    (search category-keep))))
@@ -349,25 +350,42 @@ A prefix arg forces clock in of the default task."
   :ensure t
   :config
   (yas-global-mode 1)
-  (setq yas-snippet-dirs '("~/.emacs.d/snippets")))
+  (setq yas-snippet-dirs '("~/OneDrive/snippets")))
+
+(yas-reload-all)
+
 
 ;; ESS
 (use-package ess
+  :ensure t
   :init (require 'ess-site)
   :config
   (ess-toggle-underscore t)
   (global-set-key (kbd "M--") (lambda () (interactive) (insert " <- ")))
-  (ess-toggle-underscore nil))
+  (ess-toggle-underscore nil)
+  (add-to-list 'ispell-skip-region-alist '("^```" . "```$"))
+  )
+
+
 
 ;; poly mode
+;; (use-package polymode
+;;   :ensure t
+;;   :config
+;;   (progn
+;;     (require 'poly-R)
+;;     (require 'poly-markdown)
+;;     (require 'poly-noweb)
+;;     (add-to-list 'auto-mode-alist '("\\.Rmd" . poly-markdown+r-mode))))
+
 (use-package polymode
+  :ensure t
+  :ensure markdown-mode
+  :ensure poly-R
+  :ensure poly-noweb
   :config
-  (progn
-    (require 'poly-R)
-    (require 'poly-markdown)
-    (require 'poly-noweb)
-    (add-to-list 'auto-mode-alist '("\\.Rmd" . poly-markdown+r-mode))))
-  
+  (add-to-list 'auto-mode-alist '("\\.Rmd" . poly-markdown+r-mode)))
+
 ;; latex
 (use-package tex
   :ensure auctex
@@ -395,6 +413,7 @@ A prefix arg forces clock in of the default task."
 
 ;; web-mode
 (use-package web-mode
+  :ensure t
   :mode "\\.html\\'"
   :bind (("C-c i" . insert-li-tag)
 	 ("C-c f" . insert-fragment))
@@ -416,57 +435,12 @@ A prefix arg forces clock in of the default task."
 	" class=\"fragment\"")
   )
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-enabled-themes (quote (sanityinc-tomorrow-eighties)))
- '(custom-safe-themes
-   (quote
-    ("229c5cf9c9bd4012be621d271320036c69a14758f70e60385e87880b46d60780" "285efd6352377e0e3b68c71ab12c43d2b72072f64d436584f9159a58c4ff545a" "e1ecb0536abec692b5a5e845067d75273fe36f24d01210bf0aa5842f2a7e029f" "be9645aaa8c11f76a10bcf36aaf83f54f4587ced1b9b679b55639c87404e2499" "99ea831ca79a916f1bd789de366b639d09811501e8c092c85b2cb7d697777f93" "ca849ae0c889eb918785cdc75452b1e11a00848a5128a95a23872e0119ccc8f4" "c83c095dd01cde64b631fb0fe5980587deec3834dc55144a6e78ff91ebc80b19" "774aa2e67af37a26625f8b8c86f4557edb0bac5426ae061991a7a1a4b1c7e375" "1ed5c8b7478d505a358f578c00b58b430dde379b856fbcb60ed8d345fc95594e" "2cdc13ef8c76a22daa0f46370011f54e79bae00d5736340a5ddfe656a767fddf" "d5f8099d98174116cba9912fe2a0c3196a7cd405d12fa6b9375c55fc510988b5" "a038af4fff7330f27f4baec145ef142f8ea208648e65a4b0eac3601763598665" "1d50bd38eed63d8de5fcfce37c4bb2f660a02d3dff9cbfd807a309db671ff1af" "e074be1c799b509f52870ee596a5977b519f6d269455b84ed998666cf6fc802a" "0809c08440b51a39c77ec5529f89af83ab256a9d48107b088d40098ce322c7d8" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" default)))
- '(mail-user-agent (quote mu4e-user-agent))
- '(message-send-mail-function (quote smtpmail-send-it))
- '(mu4e-attachment-dir "~/Downloads")
- '(mu4e-drafts-folder "/Drafts")
- '(mu4e-get-mail-command "true")
- '(mu4e-maildir "/home/rich/Maildir")
- '(mu4e-maildir-shortcuts
-   (quote
-    (("/INBOX" . 105)
-     ("/Archive" . 97)
-     ("/Trash" . 116)
-     ("/Drafts" . 100)
-     ("/Reviews" . 114)
-     ("/Sent" . 115))))
- '(mu4e-refile-folder "/Archive")
- '(mu4e-reply-to-address "lucasri@msu.edu" t)
- '(mu4e-sent-folder "/Sent")
- '(mu4e-trash-folder "/Trash")
- '(mu4e-update-interval 300)
- '(mu4e-use-fancy-chars t)
- '(mu4e-user-mail-address-list (quote ("lucasri@msu.edu")))
- '(mu4e-view-show-addresses t)
- '(mu4e-view-show-images t)
- '(package-selected-packages
-   (quote
-    (org-noter doom-themes helm-projectile projectile dired-quick-sort htmlize helm-mu org-pdfview mingus fzf wttrin polymode markdown-mode helm-bibtex helm-chrome helm-google helm mu4e-alert shell-pop pdf-tools tablist zenburn-theme nord-theme web-mode use-package ranger poly-noweb poly-markdown poly-R paradox org markdown-preview-mode julia-mode ess color-theme-sanityinc-tomorrow auctex)))
- '(smtpmail-default-smtp-server "localhost")
- '(smtpmail-local-domain "localhost")
- '(smtpmail-smtp-server "localhost")
- '(smtpmail-smtp-service 1025)
- '(user-full-name "Richard E. Lucas")
- '(user-mail-address "lucasri@msu.edu"))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
 
 
 ;; tablist
-(use-package tablist)
+(use-package tablist
+  :ensure t
+  )
 
 ;; pdf-tools
 
@@ -475,6 +449,7 @@ A prefix arg forces clock in of the default task."
   (save-buffer))
 
 (use-package pdf-tools
+  :ensure t
   :pin manual
   :config
   (pdf-tools-install)
@@ -492,8 +467,6 @@ A prefix arg forces clock in of the default task."
     (advice-add 'pdf-annot-edit-contents-commit :after 'rel/save-buffer-no-args))
   )
 
-;; org-pdfview
-(use-package org-pdfview)
 
 ;; company-mode
 (use-package company
@@ -521,6 +494,7 @@ A prefix arg forces clock in of the default task."
   (setq mu4e-compose-in-new-frame t)
 ;;  (setq mu4e-change-filenames-when-moving t)
   (setq mu4e-view-use-gnus t)
+  (setq mail-personal-alias-file (expand-file-name "/home/rich/.mailrc"))
   :config
   (add-to-list 'mu4e-view-actions
 	       '("ViewInBrowser" . mu4e-action-view-in-browser) t)
@@ -556,7 +530,7 @@ A prefix arg forces clock in of the default task."
   )
 
 (require 'gnus-icalendar)
-(setq gnus-icalendar-org-capture-file "~/Dropbox/org/calendar.org")
+(setq gnus-icalendar-org-capture-file "~/OneDrive/org/calendar.org")
 (setq gnus-icalendar-org-capture-headline '("Calendar"))
 (gnus-icalendar-org-setup)
 
@@ -576,6 +550,7 @@ A prefix arg forces clock in of the default task."
 	 "flag:unread maildir:/INBOX"
 	 ))
   :config
+  (mu4e-alert-enable-notifications)
   (mu4e-alert-set-default-style 'libnotify)
   (add-hook 'after-init-hook #'mu4e-alert-enable-notifications)
   (add-hook 'after-init-hook #'mu4e-alert-enable-mode-line-display)
@@ -600,6 +575,8 @@ A prefix arg forces clock in of the default task."
     )
   :config
   )
+
+(setq helm-ff-keep-cached-candidates nil)
 
 ;; (use-package helm-mu
 ;;   :ensure t
@@ -654,16 +631,16 @@ A prefix arg forces clock in of the default task."
   (dired-quick-sort-setup))
 
 
-(use-package projectile
-  :ensure t
-  :config
-  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-  (projectile-mode +1))
+;; (use-package projectile
+;;   :ensure t
+;;   :config
+;;   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+;;   (projectile-mode +1))
 
-(use-package helm-projectile
-  :ensure t
-  :config
-  (helm-projectile-on))
+;; (use-package helm-projectile
+;;   :ensure t
+;;   :config
+;;   (helm-projectile-on))
 
 (use-package doom-themes
   :ensure t
@@ -671,7 +648,7 @@ A prefix arg forces clock in of the default task."
   ;; Global settings (defaults)
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
         doom-themes-enable-italic t) ; if nil, italics is universally disabled
-  (load-theme 'doom-one t)
+;;  (load-theme 'doom-flatwhite t)
 
   ;; Enable flashing mode-line on errors
   (doom-themes-visual-bell-config)
@@ -695,3 +672,131 @@ A prefix arg forces clock in of the default task."
 				     ("\\.xls//'" "libreoffice")
 				     ("\\.xlsx//'" "libreoffice")))
 				     
+
+(use-package i3wm-config-mode
+  :ensure t
+  :defer t)
+
+
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-enabled-themes '(sanityinc-tomorrow-eighties))
+ '(custom-safe-themes
+   '("06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" "3d54650e34fa27561eb81fc3ceed504970cc553cfd37f46e8a80ec32254a3ec3" "1704976a1797342a1b4ea7a75bdbb3be1569f4619134341bd5a4c1cfb16abad4" "bb08c73af94ee74453c90422485b29e5643b73b05e8de029a6909af6a3fb3f58" "1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e" "4b0e826f58b39e2ce2829fab8ca999bcdc076dec35187bf4e9a4b938cb5771dc" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" default))
+ '(package-selected-packages
+   '(org-roam-server org-roam-bibtex org-ref org-roam polymode org-chef ## pdf-tools memory-usage zenburn-theme yasnippet wttrin web-mode uuidgen use-package shell-pop ranger poly-R paradox org-super-agenda org-pdfview org-noter org-fstree nord-theme mu4e-alert mingus markdown-preview-mode julia-mode htmlize helm-projectile helm-mu helm-google helm-chrome helm-bibtex fzf ess doom-themes dired-quick-sort company color-theme-sanityinc-tomorrow benchmark-init auctex atomic-chrome)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+
+(add-to-list 'default-frame-alist '(font . "Droid Sans Mono-10" ))
+(set-face-attribute 'default t :font "Droid Sans Mono-10" )
+;;(set-frame-font "Inconsolata Regular-20")
+
+(require 'org-fstree)
+
+
+;; (require 'mu4e-thread-folding)
+
+;; (add-to-list 'mu4e-header-info-custom
+;;              '(:empty . (:name "Empty"
+;;                          :shortname ""
+;;                          :function (lambda (msg) "  "))))
+;; (setq mu4e-headers-fields '((:empty         .    2)
+;;                             (:human-date    .   12)
+;;                             (:flags         .    6)
+;;                             (:mailing-list  .   10)
+;;                             (:from          .   22)
+;;                             (:subject       .   nil)))
+
+
+;; org-chef
+(use-package org-chef
+  :ensure t)
+(setq org-chef-prefer-json-ld t)
+
+
+;; org-roam
+(use-package org-roam
+      :ensure t
+      :hook
+      (after-init . org-roam-mode)
+      :custom
+      (org-roam-directory "/home/rich/OneDrive/org/roam")
+      (org-roam-index-file "/home/rich/OneDrive/org/roam/index.org")
+      :bind (:map org-roam-mode-map
+              (("C-c n l" . org-roam)
+               ("C-c n f" . org-roam-find-file)
+               ("C-c n g" . org-roam-graph))
+              :map org-mode-map
+              (("C-c n i" . org-roam-insert))
+              (("C-c n I" . org-roam-insert-immediate)))
+      :config
+      (require 'org-roam-protocol)
+      (setq org-roam-capture-ref-templates (quote
+				      (("r" "ref" plain (function org-roam-capture--get-point)
+					:file-name "${slug}"
+					:head "#+title: ${title}
+#+roam_key: ${ref}
+#+roam_tags: %^{keywords}
+
+%?
+
+${body}"
+					:unnarrowed t))))
+      )
+
+(use-package org-ref
+  :ensure t
+  :config
+  (setq reftex-default-bibliography '("~/OneDrive/MyLibrary.bib")
+	org-ref-bibliography-notes "/home/rich/OneDrive/org/notes.org"
+	org-ref-default-bibliography '("/home/rich/OneDrive/MyLibrary.bib")
+	)
+  )
+(require 'org-ref)
+
+(use-package org-roam-bibtex
+  :ensure t
+  :after org-roam
+  :hook (org-roam-mode . org-roam-bibtex-mode)
+  :config
+  (setq orb-templates
+      '((\"r\" \"reference\" plain (function org-roam-capture--get-point)
+	 "#+ROAM_KEY: cite:%^{citekey}
+#+ROAM_TAGS: %^{keywords}
+#+PROPERTY: type: %^{entry-type}
+#+PROPERTY: author: %^{author} 
+fullcite:%\\1
+%?"
+         :file-name "${citekey}"
+         :head "#+TITLE: ${title}\n"
+         :unnarrowed t)))
+  ) ; optional: if Org Ref is not loaded anywhere else, load it here
+
+(use-package org-roam-server
+  :ensure t
+  :config
+  (setq org-roam-server-host "127.0.0.1"
+        org-roam-server-port 8080
+        org-roam-server-authenticate nil
+        org-roam-server-export-inline-images t
+        org-roam-server-serve-files nil
+        org-roam-server-served-file-extensions '("pdf" "mp4" "ogv")
+        org-roam-server-network-poll t
+        org-roam-server-network-arrows nil
+        org-roam-server-network-label-truncate t
+        org-roam-server-network-label-truncate-length 60
+        org-roam-server-network-label-wrap-length 20))
+
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((R . t)))
